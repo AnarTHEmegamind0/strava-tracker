@@ -1,0 +1,617 @@
+{
+  "info": {
+    "_postman_id": "strava-training-log-api",
+    "name": "Strava Training Log API",
+    "description": "API collection for Strava Training Log application - Mongolian fitness tracking app with AI coaching",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "strava_user_id",
+      "value": "",
+      "type": "string",
+      "description": "Cookie value for authenticated user"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "description": "Authentication endpoints for Strava OAuth",
+      "item": [
+        {
+          "name": "Login with Strava",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/strava",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "strava"]
+            },
+            "description": "Redirects to Strava OAuth login page"
+          }
+        },
+        {
+          "name": "OAuth Callback",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/callback?code=AUTHORIZATION_CODE",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "callback"],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "AUTHORIZATION_CODE",
+                  "description": "Authorization code from Strava"
+                }
+              ]
+            },
+            "description": "Handles OAuth callback from Strava and sets authentication cookies"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "logout"]
+            },
+            "description": "Logs out the user by clearing authentication cookies"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Athlete",
+      "description": "Athlete profile endpoints",
+      "item": [
+        {
+          "name": "Get Current Athlete",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "strava_user_id={{strava_user_id}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/athlete",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "athlete"]
+            },
+            "description": "Returns the authenticated athlete's profile information"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": 12345678,\n  \"username\": \"athlete_username\",\n  \"firstname\": \"John\",\n  \"lastname\": \"Doe\",\n  \"city\": \"Ulaanbaatar\",\n  \"country\": \"Mongolia\",\n  \"profile\": \"https://example.com/profile.jpg\",\n  \"profile_medium\": \"https://example.com/profile_medium.jpg\"\n}"
+            },
+            {
+              "name": "Not Authenticated",
+              "status": "Unauthorized",
+              "code": 401,
+              "body": "{\n  \"error\": \"Not authenticated\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Activities",
+      "description": "Activity management endpoints",
+      "item": [
+        {
+          "name": "Get Activities",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "strava_user_id={{strava_user_id}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/activities",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "activities"]
+            },
+            "description": "Returns cached activities from database"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"activities\": [\n    {\n      \"id\": 1,\n      \"strava_id\": 1234567890,\n      \"user_id\": 1,\n      \"name\": \"Morning Run\",\n      \"type\": \"Run\",\n      \"start_date\": \"2024-01-15T08:00:00Z\",\n      \"distance\": 5000,\n      \"moving_time\": 1800,\n      \"elevation_gain\": 50,\n      \"average_speed\": 2.78,\n      \"calories\": 350\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Sync Activities from Strava",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "strava_user_id={{strava_user_id}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/activities?refresh=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "activities"],
+              "query": [
+                {
+                  "key": "refresh",
+                  "value": "true",
+                  "description": "Fetches fresh data from Strava API"
+                }
+              ]
+            },
+            "description": "Syncs activities from Strava API and returns updated list"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Goals",
+      "description": "Goal management endpoints",
+      "item": [
+        {
+          "name": "Get All Goals",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "strava_user_id={{strava_user_id}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/goals",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "goals"]
+            },
+            "description": "Returns all goals with calculated progress"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"goals\": [\n    {\n      \"id\": 1,\n      \"user_id\": 1,\n      \"title\": \"Weekly Running Goal\",\n      \"type\": \"weekly\",\n      \"metric\": \"distance\",\n      \"target_value\": 30000,\n      \"activity_type\": \"Run\",\n      \"current_value\": 15000,\n      \"progress_percent\": 50,\n      \"days_left\": 3\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Goal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "strava_user_id={{strava_user_id}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Долоо хоногт 30км гүйх\",\n  \"type\": \"weekly\",\n  \"metric\": \"distance\",\n  \"target_value\": 30000,\n  \"activity_type\": \"Run\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/goals",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "goals"]
+            },
+            "description": "Creates a new goal. Types: weekly, monthly. Metrics: distance, time, count, elevation"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"goal\": {\n    \"id\": 1,\n    \"user_id\": 1,\n    \"title\": \"Долоо хоногт 30км гүйх\",\n    \"type\": \"weekly\",\n    \"metric\": \"distance\",\n    \"target_value\": 30000,\n    \"activity_type\": \"Run\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Goal",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "strava_user_id={{strava_user_id}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"title\": \"Updated Goal Title\",\n  \"target_value\": 40000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/goals",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "goals"]
+            },
+            "description": "Updates an existing goal"
+          }
+        },
+        {
+          "name": "Delete Goal",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "strava_user_id={{strava_user_id}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/goals?id=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "goals"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "Goal ID to delete"
+                }
+              ]
+            },
+            "description": "Deletes a goal by ID"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Statistics",
+      "description": "Training statistics endpoints",
+      "item": [
+        {
+          "name": "Get Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "strava_user_id={{strava_user_id}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/statistics",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "statistics"]
+            },
+            "description": "Returns comprehensive training statistics including weekly, monthly, and historical data"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"weeklyStats\": {\n    \"total_distance\": 25000,\n    \"total_time\": 7200,\n    \"total_elevation\": 300,\n    \"activity_count\": 5\n  },\n  \"monthlyStats\": {\n    \"total_distance\": 100000,\n    \"total_time\": 28800,\n    \"total_elevation\": 1200,\n    \"activity_count\": 20\n  },\n  \"weeklyHistory\": [\n    {\n      \"week_start\": \"2024-01-08\",\n      \"total_distance\": 25000,\n      \"total_time\": 7200,\n      \"activity_count\": 5\n    }\n  ],\n  \"activityBreakdown\": [\n    {\n      \"type\": \"Run\",\n      \"count\": 15,\n      \"percentage\": 75\n    },\n    {\n      \"type\": \"Ride\",\n      \"count\": 5,\n      \"percentage\": 25\n    }\n  ],\n  \"personalRecords\": [\n    {\n      \"type\": \"Longest Distance\",\n      \"value\": 21097,\n      \"activity_name\": \"Half Marathon\",\n      \"date\": \"2024-01-10\"\n    }\n  ],\n  \"weekComparison\": {\n    \"thisWeek\": {\n      \"total_distance\": 25000,\n      \"total_time\": 7200,\n      \"total_elevation\": 300,\n      \"activity_count\": 5\n    },\n    \"changes\": {\n      \"distance\": 10,\n      \"time\": 5,\n      \"elevation\": -2,\n      \"count\": 1\n    }\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Chat (AI Coach)",
+      "description": "AI coaching chat endpoints",
+      "item": [
+        {
+          "name": "Get Chat History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "strava_user_id={{strava_user_id}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "chat"]
+            },
+            "description": "Returns chat history with AI coach"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"messages\": [\n    {\n      \"id\": 1,\n      \"user_id\": 1,\n      \"role\": \"user\",\n      \"content\": \"How can I improve my pace?\",\n      \"created_at\": \"2024-01-15T10:00:00Z\"\n    },\n    {\n      \"id\": 2,\n      \"user_id\": 1,\n      \"role\": \"assistant\",\n      \"content\": \"Based on your recent activities...\",\n      \"created_at\": \"2024-01-15T10:00:05Z\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "strava_user_id={{strava_user_id}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Миний дасгалын талаар юу хэлж чадах вэ?\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "chat"]
+            },
+            "description": "Sends a message to AI coach and receives a response based on your training data"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Таны сүүлийн 30 өдрийн дасгалыг харахад...\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Clear Chat History",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "strava_user_id={{strava_user_id}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "chat"]
+            },
+            "description": "Clears all chat history with AI coach"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AI Analysis",
+      "description": "AI-powered analysis endpoints",
+      "item": [
+        {
+          "name": "Analyze Activity",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "strava_user_id={{strava_user_id}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activityId\": 1234567890\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/ai/analyze-activity",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ai", "analyze-activity"]
+            },
+            "description": "Analyzes a specific activity and provides AI insights"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"analysis\": \"Энэ дасгал таны өмнөх гүйлтүүдтэй харьцуулахад...\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Goal Advice",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "strava_user_id={{strava_user_id}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"goalId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/ai/goal-advice",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ai", "goal-advice"]
+            },
+            "description": "Gets AI advice for achieving a specific goal"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"advice\": \"Таны зорилгод хүрэхийн тулд...\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Generate Training Plan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "strava_user_id={{strava_user_id}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/ai/training-plan",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ai", "training-plan"]
+            },
+            "description": "Generates a personalized training plan based on your activities and goals"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"plan\": \"# Таны дасгалын төлөвлөгөө\\n\\n## Энэ долоо хоног\\n- Даваа: Хөнгөн гүйлт 5км\\n- Лхагва: Интервал дасгал\\n...\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Weekly Summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "strava_user_id={{strava_user_id}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ai/weekly-summary",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ai", "weekly-summary"]
+            },
+            "description": "Gets an AI-generated summary of your weekly training"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"summary\": \"Энэ долоо хоногт та 5 удаа дасгал хийж, нийт 25км гүйсэн байна...\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Export",
+      "description": "Data export endpoints",
+      "item": [
+        {
+          "name": "Export Activities (CSV)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "strava_user_id={{strava_user_id}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/export",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "export"]
+            },
+            "description": "Downloads all activities as a CSV file"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/csv"
+                },
+                {
+                  "key": "Content-Disposition",
+                  "value": "attachment; filename=\"strava-activities-2024-01-15.csv\""
+                }
+              ],
+              "body": "Date,Name,Type,Distance (km),Duration (min),Elevation (m),Avg Pace (min/km)\n2024-01-15,\"Morning Run\",Run,5.00,30.0,50.0,6.00"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
