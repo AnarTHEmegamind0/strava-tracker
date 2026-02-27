@@ -28,9 +28,9 @@ function getCredentials(): { clientId: string; clientSecret: string } {
   };
 }
 
-export function getAuthorizationUrl(): string {
+export function getAuthorizationUrl(redirectUriOverride?: string): string {
   const { clientId } = getCredentials();
-  const redirectUri = process.env.STRAVA_REDIRECT_URI || 'http://localhost:3000/api/auth/callback';
+  const redirectUri = redirectUriOverride || process.env.STRAVA_REDIRECT_URI || 'http://localhost:3000/api/auth/callback';
   const scope = 'read,activity:read_all,profile:read_all';
   
   return `${STRAVA_OAUTH_URL}/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${scope}`;
