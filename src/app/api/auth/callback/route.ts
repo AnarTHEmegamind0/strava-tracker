@@ -48,6 +48,9 @@ export async function GET(request: NextRequest) {
     return response;
   } catch (err) {
     console.error('OAuth callback error:', err);
-    return NextResponse.redirect(new URL('/?error=token_exchange', request.url));
+    const message = err instanceof Error ? err.message : 'token_exchange_failed';
+    const url = new URL('/?error=token_exchange', request.url);
+    url.searchParams.set('reason', message.slice(0, 120));
+    return NextResponse.redirect(url);
   }
 }

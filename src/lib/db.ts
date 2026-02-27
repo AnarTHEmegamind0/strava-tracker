@@ -349,6 +349,11 @@ export function setSetting(key: string, value: string): void {
   stmt.run(key, value, value);
 }
 
+export function deleteSetting(key: string): void {
+  const stmt = db.prepare('DELETE FROM app_settings WHERE key = ?');
+  stmt.run(key);
+}
+
 export function getStravaCredentials(): { clientId: string; clientSecret: string } | null {
   const clientId = getSetting('strava_client_id');
   const clientSecret = getSetting('strava_client_secret');
@@ -366,6 +371,11 @@ export function setStravaCredentials(clientId: string, clientSecret: string): vo
 
 export function hasStravaCredentials(): boolean {
   return getStravaCredentials() !== null;
+}
+
+export function clearStravaCredentials(): void {
+  deleteSetting('strava_client_id');
+  deleteSetting('strava_client_secret');
 }
 
 // ==================== ACHIEVEMENTS ====================

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getStravaCredentials, setStravaCredentials, hasStravaCredentials } from '@/lib/db';
+import { clearStravaCredentials, getStravaCredentials, setStravaCredentials, hasStravaCredentials } from '@/lib/db';
 
 // GET - Check if credentials exist (don't return actual values for security)
 export async function GET() {
@@ -44,5 +44,16 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Failed to save credentials:', error);
     return NextResponse.json({ error: 'Failed to save credentials' }, { status: 500 });
+  }
+}
+
+// DELETE - Clear stored credentials so env fallback can be used
+export async function DELETE() {
+  try {
+    clearStravaCredentials();
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Failed to clear credentials:', error);
+    return NextResponse.json({ error: 'Failed to clear credentials' }, { status: 500 });
   }
 }

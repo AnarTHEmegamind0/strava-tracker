@@ -19,9 +19,10 @@ export default function Home() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const urlError = params.get('error');
+    const reason = params.get('reason');
 
     if (urlError) {
-      setError(`Нэвтрэх алдаа: ${urlError}`);
+      setError(`Нэвтрэх алдаа: ${urlError}${reason ? ` (${reason})` : ''}`);
       window.history.replaceState({}, '', '/');
     }
 
