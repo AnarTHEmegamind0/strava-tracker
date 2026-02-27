@@ -141,7 +141,7 @@ export default function PaceZones({ activities }: PaceZonesProps) {
 
   if (runActivities.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm sm:p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
           ⚡ Хурдны бүсүүд (Pace Zones)
         </h3>
@@ -153,12 +153,12 @@ export default function PaceZones({ activities }: PaceZonesProps) {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
           ⚡ Хурдны бүсүүд (Pace Zones)
         </h3>
-        <div className="flex flex-wrap gap-4 text-sm">
+        <div className="grid w-full grid-cols-1 gap-2 text-sm sm:w-auto sm:grid-cols-3 sm:gap-4">
           <div className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-lg">
             <span className="text-gray-500 dark:text-gray-400">Нийт: </span>
             <span className="font-medium text-gray-900 dark:text-white">{totalRuns} гүйлт</span>
@@ -178,16 +178,15 @@ export default function PaceZones({ activities }: PaceZonesProps) {
       <div className="space-y-4">
         {zoneData.map((zone) => {
           const percentage = totalRuns > 0 ? (zone.count / totalRuns * 100) : 0;
-          const timePercentage = totalTime > 0 ? (zone.time / totalTime * 100) : 0;
           
           return (
             <div key={zone.name} className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-3 min-w-0">
                   <div className={`w-4 h-4 rounded ${zone.bgColor}`}></div>
-                  <div>
+                  <div className="min-w-0">
                     <span className="font-medium text-gray-900 dark:text-white">{zone.nameMn}</span>
-                    <span className="text-gray-500 dark:text-gray-400 text-sm ml-2">({zone.description})</span>
+                    <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">({zone.description})</span>
                   </div>
                 </div>
                 <div className="text-right">
@@ -205,10 +204,10 @@ export default function PaceZones({ activities }: PaceZonesProps) {
                 >
                   {zone.count > 0 && (
                     <>
-                      <span className="text-white text-sm font-medium">
+                      <span className="hidden text-sm font-medium text-white sm:inline">
                         {zone.distance.toFixed(1)} км
                       </span>
-                      <span className="text-white/80 text-sm">
+                      <span className="hidden text-sm text-white/80 sm:inline">
                         {formatTime(zone.time)}
                       </span>
                     </>
@@ -234,7 +233,7 @@ export default function PaceZones({ activities }: PaceZonesProps) {
           <h4 className="font-semibold text-gray-900 dark:text-white">80/20 Дүрэм Шинжилгээ</h4>
         </div>
         
-        <div className="grid grid-cols-2 gap-4 mb-3">
+        <div className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
           <div className="text-center p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg">
             <div className="text-2xl font-bold text-green-600 dark:text-green-400">
               {easyPercentage.toFixed(0)}%

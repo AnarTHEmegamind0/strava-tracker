@@ -45,7 +45,7 @@ export default function StravaStats() {
 
   if (loading) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm sm:p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Strava Статистик</h3>
         <div className="flex items-center justify-center h-32">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FC4C02]"></div>
@@ -90,8 +90,8 @@ export default function StravaStats() {
   const tabData = getTabData();
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
-      <div className="flex items-center justify-between mb-6">
+    <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm sm:p-6">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
           <svg className="w-5 h-5 text-[#FC4C02]" viewBox="0 0 24 24" fill="currentColor">
             <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" />
@@ -100,12 +100,12 @@ export default function StravaStats() {
         </h3>
         
         {/* Activity Type Tabs */}
-        <div className="flex gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+        <div className="flex gap-1 self-start rounded-lg bg-gray-100 p-1 dark:bg-gray-700">
           {(['run', 'ride', 'swim'] as const).map((type) => (
             <button
               key={type}
               onClick={() => setActiveTab(type)}
-              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+              className={`rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors sm:px-3 ${
                 activeTab === type
                   ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
                   : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
@@ -124,7 +124,7 @@ export default function StravaStats() {
           <div className="flex items-center gap-2 mb-3">
             <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Сүүлийн 4 долоо хоног</span>
           </div>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
             <div>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {tabData.recent.count}
@@ -153,7 +153,7 @@ export default function StravaStats() {
               {new Date().getFullYear()} он (YTD)
             </span>
           </div>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
             <div>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {tabData.ytd.count}
@@ -181,7 +181,7 @@ export default function StravaStats() {
             <span className="text-sm font-medium text-[#FC4C02]">Нийт бүх цаг</span>
             <span className="text-lg">{tabData.icon}</span>
           </div>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
             <div>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {tabData.all.count}
@@ -216,9 +216,9 @@ export default function StravaStats() {
       {(stats.biggest_ride_distance > 0 || stats.biggest_climb_elevation_gain > 0) && (
         <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
           <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Рекордууд</h4>
-          <div className="flex gap-4">
+          <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
             {stats.biggest_ride_distance > 0 && (
-              <div className="flex items-center gap-3 px-4 py-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <div className="flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 dark:bg-blue-900/20">
                 <span className="text-2xl">🚴</span>
                 <div>
                   <p className="text-lg font-bold text-gray-900 dark:text-white">
@@ -229,7 +229,7 @@ export default function StravaStats() {
               </div>
             )}
             {stats.biggest_climb_elevation_gain > 0 && (
-              <div className="flex items-center gap-3 px-4 py-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+              <div className="flex items-center gap-3 rounded-lg bg-green-50 px-4 py-3 dark:bg-green-900/20">
                 <span className="text-2xl">⛰️</span>
                 <div>
                   <p className="text-lg font-bold text-gray-900 dark:text-white">

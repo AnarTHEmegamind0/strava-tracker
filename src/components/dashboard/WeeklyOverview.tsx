@@ -59,11 +59,11 @@ export default function WeeklyOverview({ activities }: WeeklyOverviewProps) {
   });
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="border-border/80 shadow-sm">
+      <CardHeader className="pb-2.5">
         <CardTitle>Энэ долоо хоног</CardTitle>
       </CardHeader>
-      <CardContent className="h-56">
+      <CardContent className="h-56 pt-1 sm:h-60">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={fullWeekData}>
             <XAxis

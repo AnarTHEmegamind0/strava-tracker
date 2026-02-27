@@ -51,7 +51,7 @@ export default function TrainingPage() {
     <div className="min-h-screen">
       <DashboardHeader athlete={athlete} title="Дасгалын бүртгэл" />
       
-      <div className="p-6 space-y-6">
+      <div className="page-container section-stack py-6">
         {/* Filters */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <ActivityFilters
@@ -85,28 +85,28 @@ export default function TrainingPage() {
         </div>
 
         {/* Stats Summary */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-            <p className="text-sm text-gray-500 dark:text-gray-400">Дасгалууд</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats.count}</p>
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="rounded-xl border border-border/70 bg-card p-4">
+            <p className="text-sm text-muted-foreground">Дасгалууд</p>
+            <p className="text-2xl font-bold text-foreground">{stats.count}</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-            <p className="text-sm text-gray-500 dark:text-gray-400">Нийт зай</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats.distance} км</p>
+          <div className="rounded-xl border border-border/70 bg-card p-4">
+            <p className="text-sm text-muted-foreground">Нийт зай</p>
+            <p className="text-2xl font-bold text-foreground">{stats.distance} км</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-            <p className="text-sm text-gray-500 dark:text-gray-400">Нийт хугацаа</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats.time}ц</p>
+          <div className="rounded-xl border border-border/70 bg-card p-4">
+            <p className="text-sm text-muted-foreground">Нийт хугацаа</p>
+            <p className="text-2xl font-bold text-foreground">{stats.time}ц</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-            <p className="text-sm text-gray-500 dark:text-gray-400">Нийт өндөрлөг</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats.elevation}м</p>
+          <div className="rounded-xl border border-border/70 bg-card p-4">
+            <p className="text-sm text-muted-foreground">Нийт өндөрлөг</p>
+            <p className="text-2xl font-bold text-foreground">{stats.elevation}м</p>
           </div>
         </div>
 
         {/* Activity List */}
         {filteredActivities.length === 0 ? (
-          <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+          <div className="py-12 text-center text-muted-foreground">
             {activities.length === 0 ? (
               <>
                 <p>Дасгал байхгүй байна.</p>

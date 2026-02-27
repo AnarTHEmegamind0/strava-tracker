@@ -39,12 +39,12 @@ export default function StatCard({
   tone = 'orange',
 }: StatCardProps) {
   return (
-    <Card className="overflow-hidden">
-      <CardContent className="p-4">
-        <div className="flex items-start gap-3">
+    <Card className="group overflow-hidden border-border/60 bg-card/90 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
+      <CardContent className="p-4 sm:p-5">
+        <div className="flex items-start gap-3.5">
           <div
             className={cn(
-              'grid h-10 w-10 shrink-0 place-items-center rounded-lg',
+              'grid h-11 w-11 shrink-0 place-items-center rounded-xl transition-transform duration-300 group-hover:scale-105',
               toneClasses[tone].badge,
               toneClasses[tone].icon,
             )}
@@ -53,8 +53,8 @@ export default function StatCard({
           </div>
 
           <div className="min-w-0">
-            <p className="text-xs text-muted-foreground">{label}</p>
-            <p className="mt-1 text-lg font-semibold leading-none text-card-foreground md:text-xl">
+            <p className="text-xs font-medium tracking-wide text-muted-foreground">{label}</p>
+            <p className="mt-1.5 text-lg font-bold leading-none text-card-foreground md:text-xl">
               {value}
               {unit && <span className="ml-1 text-sm font-normal text-muted-foreground">{unit}</span>}
             </p>

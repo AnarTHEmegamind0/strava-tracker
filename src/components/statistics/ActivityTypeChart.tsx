@@ -17,20 +17,20 @@ export default function ActivityTypeChart({ data }: ActivityTypeChartProps) {
   }));
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+    <div className="rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800 sm:p-6">
+      <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
         Дасгалын төрлүүд
       </h3>
       
-      <div className="h-64">
+      <div className="h-64 sm:h-72">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={chartData}
               cx="50%"
-              cy="50%"
-              innerRadius={60}
-              outerRadius={80}
+              cy="42%"
+              innerRadius={45}
+              outerRadius={70}
               paddingAngle={5}
               dataKey="value"
             >
@@ -48,6 +48,9 @@ export default function ActivityTypeChart({ data }: ActivityTypeChartProps) {
               }}
             />
             <Legend 
+              verticalAlign="bottom"
+              iconSize={10}
+              wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }}
               formatter={(value) => <span className="text-gray-700 dark:text-gray-300">{value}</span>}
             />
           </PieChart>

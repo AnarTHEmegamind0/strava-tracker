@@ -59,7 +59,7 @@ export default function StreakCounter({ userId = 1, compact = false }: StreakCou
 
   if (loading) {
     return (
-      <Card>
+      <Card className="border-border/80 shadow-sm">
         <CardContent className={compact ? 'p-3' : 'p-6'}>
         <div className="flex items-center gap-3">
           <div className="h-12 w-12 animate-pulse rounded-full bg-muted" />
@@ -99,8 +99,8 @@ export default function StreakCounter({ userId = 1, compact = false }: StreakCou
 
   // Full mode for dashboard
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="border-border/80 shadow-sm">
+      <CardHeader className="pb-2.5">
         <div className="flex items-center justify-between">
         <CardTitle className="flex items-center gap-2">
           <span>🔥</span> Streak

@@ -75,7 +75,7 @@ export default function WorkoutBreakdown({ activities }: WorkoutBreakdownProps) 
 
   if (activities.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm sm:p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
           Дасгалын төрлийн задаргаа
         </h3>
@@ -88,7 +88,7 @@ export default function WorkoutBreakdown({ activities }: WorkoutBreakdownProps) 
 
   if (breakdown.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm sm:p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
           Дасгалын төрлийн задаргаа
         </h3>
@@ -100,8 +100,8 @@ export default function WorkoutBreakdown({ activities }: WorkoutBreakdownProps) 
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm sm:p-6">
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           Дасгалын төрлийн задаргаа
         </h3>
@@ -139,7 +139,7 @@ export default function WorkoutBreakdown({ activities }: WorkoutBreakdownProps) 
             />
           </div>
           
-          <div className="flex justify-between mt-2 text-xs text-gray-600 dark:text-gray-400">
+          <div className="mt-2 flex flex-col gap-1 text-xs text-gray-600 dark:text-gray-400 sm:flex-row sm:items-center sm:justify-between">
             <span className="flex items-center gap-1">
               <span className="w-2 h-2 bg-green-500 rounded-full" />
               Хөнгөн: {distribution.easyPercent}% ({distribution.easyCount})
@@ -159,7 +159,7 @@ export default function WorkoutBreakdown({ activities }: WorkoutBreakdownProps) 
       {/* Workout Type List */}
       <div className="space-y-3">
         {breakdown.map(item => (
-          <div key={item.type} className="flex items-center gap-3">
+          <div key={item.type} className="flex items-start gap-3">
             <div className={`w-3 h-3 rounded-full ${item.info.color}`} />
             <div className="flex-1">
               <div className="flex items-center justify-between">
@@ -170,8 +170,8 @@ export default function WorkoutBreakdown({ activities }: WorkoutBreakdownProps) 
                   {item.count} дасгал
                 </span>
               </div>
-              <div className="flex items-center justify-between mt-1">
-                <div className="flex-1 h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden mr-3">
+              <div className="mt-1 flex items-center justify-between gap-2">
+                <div className="mr-1 h-2 flex-1 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-700 sm:mr-3">
                   <div 
                     className={`h-full ${item.info.color} transition-all duration-500`}
                     style={{ width: `${item.percentage}%` }}
@@ -190,9 +190,9 @@ export default function WorkoutBreakdown({ activities }: WorkoutBreakdownProps) 
       </div>
 
       {/* Legend */}
-      <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+      <div className="mt-6 border-t border-gray-200 pt-4 dark:border-gray-700">
         <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Төрлийн тайлбар:</p>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {[
             { type: 'recovery' as WorkoutType, desc: 'Маш хөнгөн хурд' },
             { type: 'easy' as WorkoutType, desc: 'Суурь бэлтгэл' },

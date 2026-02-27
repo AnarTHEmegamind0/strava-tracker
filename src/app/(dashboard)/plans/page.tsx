@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { useApp } from '@/lib/context';
 import DashboardHeader from '@/components/layout/DashboardHeader';
 import Link from 'next/link';
@@ -33,6 +33,8 @@ interface ParsedDay {
   isCompleted?: boolean;
 }
 
+type ViewMode = 'cards' | 'table' | 'timeline';
+
 const goalTypeLabels: Record<string, string> = {
   general: 'Ерөнхий фитнесс',
   '5k': '5км уралдаан',
@@ -43,13 +45,43 @@ const goalTypeLabels: Record<string, string> = {
   endurance: 'Тэсвэр нэмэгдүүлэх',
 };
 
-const workoutTypeConfig: Record<string, { label: string; color: string; bgColor: string; icon: string }> = {
-  rest: { label: 'Амралт', color: 'text-blue-600', bgColor: 'bg-blue-50 dark:bg-blue-900/20', icon: '😴' },
-  easy: { label: 'Хөнгөн', color: 'text-green-600', bgColor: 'bg-green-50 dark:bg-green-900/20', icon: '🚶' },
-  long: { label: 'Урт', color: 'text-purple-600', bgColor: 'bg-purple-50 dark:bg-purple-900/20', icon: '🏃' },
-  tempo: { label: 'Темп', color: 'text-orange-600', bgColor: 'bg-orange-50 dark:bg-orange-900/20', icon: '⚡' },
-  interval: { label: 'Интервал', color: 'text-red-600', bgColor: 'bg-red-50 dark:bg-red-900/20', icon: '🔥' },
-  race: { label: 'Уралдаан', color: 'text-yellow-600', bgColor: 'bg-yellow-50 dark:bg-yellow-900/20', icon: '🏆' },
+const workoutTypeConfig: Record<string, { label: string; color: string; bgColor: string; icon: ReactNode }> = {
+  rest: {
+    label: 'Амралт',
+    color: 'text-blue-600',
+    bgColor: 'bg-blue-50 dark:bg-blue-900/20',
+    icon: <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-xs font-semibold text-blue-700">REST</span>,
+  },
+  easy: {
+    label: 'Хөнгөн',
+    color: 'text-green-600',
+    bgColor: 'bg-green-50 dark:bg-green-900/20',
+    icon: <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-xs font-semibold text-green-700">E</span>,
+  },
+  long: {
+    label: 'Урт',
+    color: 'text-purple-600',
+    bgColor: 'bg-purple-50 dark:bg-purple-900/20',
+    icon: <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-purple-100 text-xs font-semibold text-purple-700">L</span>,
+  },
+  tempo: {
+    label: 'Темп',
+    color: 'text-orange-600',
+    bgColor: 'bg-orange-50 dark:bg-orange-900/20',
+    icon: <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 text-xs font-semibold text-orange-700">T</span>,
+  },
+  interval: {
+    label: 'Интервал',
+    color: 'text-red-600',
+    bgColor: 'bg-red-50 dark:bg-red-900/20',
+    icon: <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-red-100 text-xs font-semibold text-red-700">I</span>,
+  },
+  race: {
+    label: 'Уралдаан',
+    color: 'text-yellow-700',
+    bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
+    icon: <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-yellow-100 text-xs font-semibold text-yellow-700">R</span>,
+  },
 };
 
 const statusConfig: Record<string, { label: string; color: string; bgColor: string }> = {
@@ -70,7 +102,7 @@ function parsePlanContent(content: string, totalDays: number, daysCompleted: num
     const trimmedLine = line.trim();
     
     // Match day patterns like "Өдөр 1:", "Day 1:", "1-р өдөр", etc.
-    const dayMatch = trimmedLine.match(/^(?:Өдөр|Day|📅)?\s*(\d+)(?:-р өдөр|:|\.|-)?\s*[:\-]?\s*(.*)$/i) ||
+    const dayMatch = trimmedLine.match(/^(?:Өдөр|Day)?\s*(\d+)(?:-р өдөр|:|\.|-)?\s*[:\-]?\s*(.*)$/i) ||
                      trimmedLine.match(/^(\d+)(?:-р)?\s*(?:өдөр|day)[:\-]?\s*(.*)$/i);
     
     if (dayMatch) {
@@ -154,7 +186,7 @@ export default function PlansPage() {
   const [plans, setPlans] = useState<TrainingPlan[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPlan, setSelectedPlan] = useState<TrainingPlan | null>(null);
-  const [viewMode, setViewMode] = useState<'cards' | 'table' | 'timeline'>('cards');
+  const [viewMode, setViewMode] = useState<ViewMode>('cards');
   const [showRawContent, setShowRawContent] = useState(false);
   const [selectedDay, setSelectedDay] = useState<ParsedDay | null>(null); // For day detail modal
 
@@ -243,17 +275,17 @@ export default function PlansPage() {
   }, {} as Record<number, ParsedDay[]>);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-background">
       <DashboardHeader athlete={athlete} title="Дасгалын Төлөвлөгөө" />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="page-container py-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl font-bold text-foreground">
               Миний Төлөвлөгөөнүүд
             </h1>
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            <p className="mt-1 text-sm text-muted-foreground">
               AI-ийн үүсгэсэн дасгалын хуваарь
             </p>
           </div>
@@ -275,37 +307,36 @@ export default function PlansPage() {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>
-              <p className="text-gray-500 dark:text-gray-400">Уншиж байна...</p>
+              <p className="text-muted-foreground">Уншиж байна...</p>
             </div>
           </div>
         ) : plans.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-orange-100 to-red-100 dark:from-orange-900/30 dark:to-red-900/30 rounded-full flex items-center justify-center">
-              <span className="text-5xl">📋</span>
+          <div className="py-16 text-center sm:py-20">
+            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-orange-100 to-red-100 dark:from-orange-900/30 dark:to-red-900/30">
+              <span className="text-sm font-semibold text-primary">PLAN</span>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            <h3 className="mb-2 text-xl font-semibold text-foreground">
               Төлөвлөгөө байхгүй байна
             </h3>
-            <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-md mx-auto">
+            <p className="mx-auto mb-6 max-w-md text-muted-foreground">
               AI дасгалжуулагчаас өөрийн зорилгод тохирсон хувийн төлөвлөгөө үүсгээрэй
             </p>
             <Link
               href="/coach"
               className="inline-flex items-center gap-2 px-6 py-3 bg-[#FC4C02] hover:bg-[#e34402] text-white rounded-xl transition-colors font-medium"
             >
-              <span className="text-xl">🤖</span>
               AI-аар төлөвлөгөө үүсгэх
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 gap-6 xl:grid-cols-4">
             {/* Plans List Sidebar */}
             <div className="lg:col-span-1">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
+              <div className="overflow-hidden rounded-2xl border border-border/70 bg-card shadow-sm">
                 <div className="p-4 border-b border-gray-100 dark:border-gray-700">
                   <h3 className="font-semibold text-gray-900 dark:text-white">Төлөвлөгөөнүүд</h3>
                 </div>
-                <div className="divide-y divide-gray-100 dark:divide-gray-700 max-h-[600px] overflow-y-auto">
+                <div className="max-h-[420px] divide-y divide-border/70 overflow-y-auto xl:max-h-[600px]">
                   {plans.map(plan => (
                     <button
                       key={plan.id}
@@ -322,9 +353,9 @@ export default function PlansPage() {
                           {statusConfig[plan.status].label}
                         </span>
                       </div>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-                        {goalTypeLabels[plan.goal_type]} • {plan.duration} {plan.duration_type === 'weeks' ? 'долоо хоног' : 'өдөр'}
-                      </p>
+                        <p className="mb-2 text-xs text-muted-foreground">
+                          {goalTypeLabels[plan.goal_type]} · {plan.duration} {plan.duration_type === 'weeks' ? 'долоо хоног' : 'өдөр'}
+                        </p>
                       {plan.status === 'active' && plan.start_date && (
                         <div className="mt-2">
                           <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
@@ -350,7 +381,7 @@ export default function PlansPage() {
               {selectedPlan ? (
                 <div className="space-y-6">
                   {/* Plan Header Card */}
-                  <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6">
+                  <div className="rounded-2xl border border-border/70 bg-card p-4 shadow-sm sm:p-6">
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
@@ -362,16 +393,10 @@ export default function PlansPage() {
                           </span>
                         </div>
                         <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                          <span className="flex items-center gap-1">
-                            <span>🎯</span> {goalTypeLabels[selectedPlan.goal_type]}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <span>📅</span> {selectedPlan.duration} {selectedPlan.duration_type === 'weeks' ? 'долоо хоног' : 'өдөр'}
-                          </span>
+                          <span className="flex items-center gap-1">Зорилго: {goalTypeLabels[selectedPlan.goal_type]}</span>
+                          <span className="flex items-center gap-1">Хугацаа: {selectedPlan.duration} {selectedPlan.duration_type === 'weeks' ? 'долоо хоног' : 'өдөр'}</span>
                           {selectedPlan.start_date && (
-                            <span className="flex items-center gap-1">
-                              <span>🚀</span> {formatDate(selectedPlan.start_date)}
-                            </span>
+                            <span className="flex items-center gap-1">Эхэлсэн: {formatDate(selectedPlan.start_date)}</span>
                           )}
                         </div>
                       </div>
@@ -426,17 +451,17 @@ export default function PlansPage() {
                   </div>
 
                   {/* View Mode Toggle */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl">
-                      {[
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-center gap-2 overflow-x-auto rounded-xl bg-gray-100 p-1 dark:bg-gray-800">
+                      {([
                         { key: 'cards', label: 'Карт', icon: '▦' },
                         { key: 'table', label: 'Хүснэгт', icon: '▤' },
                         { key: 'timeline', label: 'Цагийн шугам', icon: '▥' },
-                      ].map(mode => (
+                      ] as const).map((mode) => (
                         <button
                           key={mode.key}
-                          onClick={() => setViewMode(mode.key as any)}
-                          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                          onClick={() => setViewMode(mode.key)}
+                          className={`whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium transition-all sm:px-4 ${
                             viewMode === mode.key
                               ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
                               : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
@@ -457,7 +482,7 @@ export default function PlansPage() {
                   {/* Content Display */}
                   {showRawContent ? (
                     <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6">
-                      <pre className="whitespace-pre-wrap text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-sans">
+                      <pre className="whitespace-pre-wrap break-words text-sm leading-relaxed text-gray-700 dark:text-gray-300 font-sans">
                         {selectedPlan.content}
                       </pre>
                     </div>
@@ -469,7 +494,7 @@ export default function PlansPage() {
                           <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                             {parseInt(weekNum)}-р долоо хоног
                           </h3>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                             {days.map(day => {
                               const config = workoutTypeConfig[day.type];
                               return (
@@ -497,10 +522,10 @@ export default function PlansPage() {
                                     </div>
                                   )}
                                   
-                                  <div className="flex items-center justify-between mb-2">
-                                    <span className="text-2xl">{config.icon}</span>
-                                    <span className="text-xs font-medium text-gray-400">Өдөр {day.day}</span>
-                                  </div>
+                                   <div className="mb-2 flex items-center justify-between">
+                                     {config.icon}
+                                     <span className="text-xs font-medium text-gray-400">Өдөр {day.day}</span>
+                                   </div>
                                   
                                   <div className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium mb-2 ${config.bgColor} ${config.color}`}>
                                     {config.label}
@@ -510,10 +535,10 @@ export default function PlansPage() {
                                     {day.title}
                                   </p>
                                   
-                                  <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                                    {day.distance && <span>📏 {day.distance}</span>}
-                                    {day.duration && <span>⏱️ {day.duration}</span>}
-                                  </div>
+                                   <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                                     {day.distance && <span>Зай: {day.distance}</span>}
+                                     {day.duration && <span>Хугацаа: {day.duration}</span>}
+                                   </div>
                                   
                                   {day.description && (
                                     <p className="mt-2 text-xs text-gray-500 dark:text-gray-400 line-clamp-2">
@@ -559,7 +584,7 @@ export default function PlansPage() {
                                 >
                                   <td className="px-4 py-3">
                                     <div className="flex items-center gap-2">
-                                      <span className="text-lg">{config.icon}</span>
+                                      {config.icon}
                                       <span className="font-medium text-gray-900 dark:text-white">Өдөр {day.day}</span>
                                       {day.isToday && (
                                         <span className="px-2 py-0.5 bg-[#FC4C02] text-white text-xs font-bold rounded-full">
@@ -617,7 +642,7 @@ export default function PlansPage() {
                         <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700" />
                         
                         <div className="space-y-6">
-                          {parsedDays.map((day, index) => {
+                          {parsedDays.map((day) => {
                             const config = workoutTypeConfig[day.type];
                             return (
                               <div 
@@ -658,9 +683,9 @@ export default function PlansPage() {
                                       </div>
                                     </div>
                                     
-                                    <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
-                                      {day.distance && <span>📏 {day.distance}</span>}
-                                      {day.duration && <span>⏱️ {day.duration}</span>}
+                                      <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+                                       {day.distance && <span>Зай: {day.distance}</span>}
+                                       {day.duration && <span>Хугацаа: {day.duration}</span>}
                                       {day.isCompleted && (
                                         <span className="flex items-center gap-1 text-green-600">
                                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -686,8 +711,8 @@ export default function PlansPage() {
                   )}
                 </div>
               ) : (
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-12 text-center">
-                  <div className="text-6xl mb-4">👈</div>
+                <div className="rounded-2xl border border-border/70 bg-card p-12 text-center shadow-sm">
+                  <div className="mb-4 text-sm font-semibold text-primary">СОНГОХ</div>
                   <p className="text-gray-500 dark:text-gray-400">
                     Зүүн талаас төлөвлөгөө сонгоно уу
                   </p>
@@ -700,7 +725,7 @@ export default function PlansPage() {
 
       {/* Day Detail Modal */}
       {selectedDay && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
           {/* Backdrop */}
           <div 
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -708,12 +733,12 @@ export default function PlansPage() {
           />
           
           {/* Modal */}
-          <div className="relative w-full max-w-lg bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+          <div className="relative w-full max-w-lg overflow-y-auto rounded-2xl bg-white shadow-2xl animate-in fade-in zoom-in duration-200 dark:bg-gray-800 max-h-[92vh]">
             {/* Header */}
             <div className={`p-6 ${workoutTypeConfig[selectedDay.type].bgColor}`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <span className="text-5xl">{workoutTypeConfig[selectedDay.type].icon}</span>
+                  {workoutTypeConfig[selectedDay.type].icon}
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="text-xl font-bold text-gray-900 dark:text-white">
@@ -760,11 +785,10 @@ export default function PlansPage() {
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {selectedDay.distance && (
                   <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                     <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mb-1">
-                      <span className="text-lg">📏</span>
                       <span className="text-sm font-medium">Зай</span>
                     </div>
                     <p className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -775,7 +799,6 @@ export default function PlansPage() {
                 {selectedDay.duration && (
                   <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                     <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mb-1">
-                      <span className="text-lg">⏱️</span>
                       <span className="text-sm font-medium">Хугацаа</span>
                     </div>
                     <p className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -785,7 +808,6 @@ export default function PlansPage() {
                 )}
                 {!selectedDay.distance && !selectedDay.duration && selectedDay.type === 'rest' && (
                   <div className="col-span-2 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-center">
-                    <span className="text-3xl mb-2 block">😴</span>
                     <p className="text-blue-700 dark:text-blue-300 font-medium">
                       Амралтын өдөр - Биеийг сэргээ!
                     </p>
@@ -809,7 +831,7 @@ export default function PlansPage() {
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
                 <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Дасгалын төрлийн тухай</h4>
                 <div className="flex items-start gap-3">
-                  <span className="text-2xl">{workoutTypeConfig[selectedDay.type].icon}</span>
+                  {workoutTypeConfig[selectedDay.type].icon}
                   <div>
                     <p className={`font-semibold ${workoutTypeConfig[selectedDay.type].color}`}>
                       {workoutTypeConfig[selectedDay.type].label}
@@ -828,9 +850,9 @@ export default function PlansPage() {
 
               {/* Tips based on workout type */}
               <div className="p-4 bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 rounded-xl">
-                <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
-                  <span>💡</span> Зөвлөмж
-                </h4>
+                  <h4 className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Зөвлөмж
+                  </h4>
                 <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
                   {selectedDay.type === 'rest' && (
                     <>
@@ -856,7 +878,7 @@ export default function PlansPage() {
                   {selectedDay.type === 'tempo' && (
                     <>
                       <li>• Халаалт, сэрүүцэлт заавал хий</li>
-                      <li>• "Тухтай бус" боловч хэлээр ярьж чадах байх</li>
+                      <li>• &quot;Тухтай бус&quot; боловч хэлээр ярьж чадах байх</li>
                       <li>• Хурдаа тогтвортой барь</li>
                     </>
                   )}

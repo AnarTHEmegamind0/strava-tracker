@@ -36,8 +36,13 @@ export default function TrainingRecommendations({ activities }: TrainingRecommen
     const recentActivities = activities.filter(a => new Date(a.start_date) >= fourWeeksAgo);
     const weeklyVolume = recentActivities.reduce((sum, a) => sum + a.distance, 0) / 4;
     
-    // Check run frequency
-    const weeksOfData = Math.max(1, Math.ceil((Date.now() - new Date(activities[activities.length - 1]?.start_date || Date.now()).getTime()) / (7 * 24 * 60 * 60 * 1000)));
+    // Check run frequency (deterministic, no Date.now in render)
+    const timestamps = activities.map((a) => new Date(a.start_date).getTime());
+    const minTs = timestamps.length > 0 ? Math.min(...timestamps) : 0;
+    const maxTs = timestamps.length > 0 ? Math.max(...timestamps) : 0;
+    const weeksOfData = timestamps.length > 0
+      ? Math.max(1, Math.ceil((maxTs - minTs) / (7 * 24 * 60 * 60 * 1000)))
+      : 1;
     const runsPerWeek = activities.length / weeksOfData;
     
     // Long run analysis

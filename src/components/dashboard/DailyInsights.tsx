@@ -78,13 +78,13 @@ export default function DailyInsights() {
 
   return (
     <Card className="border-primary/20 bg-gradient-to-br from-primary to-accent text-white">
-      <CardContent className="p-6">
-      <div className="mb-4 flex items-center justify-between">
+      <CardContent className="p-5 sm:p-6">
+      <div className="mb-4 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <span className="text-xl">🤖</span>
           <h3 className="text-lg font-semibold">AI Өдрийн зөвлөмж</h3>
         </div>
-        <div className="rounded-full bg-white/20 px-2 py-1 text-xs">
+        <div className="rounded-full bg-white/20 px-2 py-1 text-xs whitespace-nowrap">
           {new Date().toLocaleDateString('mn-MN', { weekday: 'short', month: 'short', day: 'numeric' })}
         </div>
       </div>
@@ -93,7 +93,7 @@ export default function DailyInsights() {
         <p className="text-sm leading-relaxed whitespace-pre-line">{data.insights}</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3 sm:gap-3">
         <div className="rounded-lg bg-white/10 p-3 text-center">
           <p className="text-xl font-bold">{data.stats.lastWeekDistance.toFixed(1)}</p>
           <p className="text-xs text-white/70">км (7 хоног)</p>

@@ -60,12 +60,12 @@ export default function WeekComparison({ thisWeek, changes }: WeekComparisonProp
   ];
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm sm:p-6">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
         Энэ долоо хоног vs Өнгөрсөн долоо хоног
       </h3>
       
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         {stats.map((stat) => (
           <div
             key={stat.label}
@@ -75,7 +75,7 @@ export default function WeekComparison({ thisWeek, changes }: WeekComparisonProp
               <span>{stat.icon}</span>
               <span className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</span>
             </div>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+            <p className="text-xl font-bold text-gray-900 dark:text-white sm:text-2xl">
               {stat.value}
             </p>
             <p className={`text-sm font-medium ${getChangeColor(stat.change)}`}>

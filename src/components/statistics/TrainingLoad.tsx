@@ -79,8 +79,8 @@ export default function TrainingLoad() {
 
   if (loading) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+      <div className="rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800 sm:p-6">
+        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white">
           📈 Дасгалын ачаалал (Training Load)
         </h3>
         <div className="flex items-center justify-center py-12">
@@ -92,8 +92,8 @@ export default function TrainingLoad() {
 
   if (!data) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+      <div className="rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800 sm:p-6">
+        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white">
           📈 Дасгалын ачаалал (Training Load)
         </h3>
         <p className="text-gray-500 dark:text-gray-400 text-center py-8">
@@ -111,21 +111,21 @@ export default function TrainingLoad() {
   const ctlWidth = (data.ctl / maxLoad) * 100;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
-      <div className="flex items-center justify-between mb-6">
+    <div className="rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800 sm:p-6">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
           📈 Дасгалын ачаалал
         </h3>
-        <div className={`px-3 py-1 rounded-full text-sm font-medium ${statusInfo.bg} ${statusInfo.color}`}>
+        <div className={`self-start rounded-full px-3 py-1 text-sm font-medium ${statusInfo.bg} ${statusInfo.color}`}>
           {statusInfo.emoji} {statusInfo.label}
         </div>
       </div>
 
       {/* Load Metrics */}
-      <div className="space-y-4 mb-6">
+      <div className="mb-6 space-y-4">
         {/* ATL - Acute Training Load */}
         <div>
-          <div className="flex justify-between text-sm mb-1">
+          <div className="mb-1 flex justify-between text-sm gap-2">
             <span className="text-gray-600 dark:text-gray-400">ATL (7 хоног)</span>
             <span className="font-semibold text-gray-900 dark:text-white">{data.atl}</span>
           </div>
@@ -139,7 +139,7 @@ export default function TrainingLoad() {
 
         {/* CTL - Chronic Training Load */}
         <div>
-          <div className="flex justify-between text-sm mb-1">
+          <div className="mb-1 flex justify-between text-sm gap-2">
             <span className="text-gray-600 dark:text-gray-400">CTL (28 хоног)</span>
             <span className="font-semibold text-gray-900 dark:text-white">{data.ctl}</span>
           </div>
@@ -152,8 +152,8 @@ export default function TrainingLoad() {
         </div>
 
         {/* TSB - Training Stress Balance */}
-        <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex justify-between items-center">
+        <div className="border-t border-gray-200 pt-2 dark:border-gray-700">
+          <div className="flex items-center justify-between gap-2">
             <span className="text-gray-600 dark:text-gray-400">TSB (Тэнцвэр)</span>
             <span className={`text-2xl font-bold ${data.tsb >= 0 ? 'text-green-500' : 'text-red-500'}`}>
               {data.tsb >= 0 ? '+' : ''}{data.tsb}
@@ -166,7 +166,7 @@ export default function TrainingLoad() {
       </div>
 
       {/* Status Description */}
-      <div className={`p-4 rounded-lg ${statusInfo.bg}`}>
+      <div className={`rounded-lg p-4 ${statusInfo.bg}`}>
         <p className={`text-sm font-medium ${statusInfo.color} mb-2`}>
           {statusInfo.description}
         </p>
@@ -186,7 +186,7 @@ export default function TrainingLoad() {
       )}
 
       {/* Legend */}
-      <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+      <div className="mt-4 border-t border-gray-200 pt-4 dark:border-gray-700">
         <p className="text-xs text-gray-500 dark:text-gray-500">
           <strong>ATL</strong> = Acute Training Load (сүүлийн 7 хоногийн ачаалал)<br/>
           <strong>CTL</strong> = Chronic Training Load (сүүлийн 28 хоногийн ачаалал)<br/>

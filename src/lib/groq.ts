@@ -662,6 +662,178 @@ export async function calculateRecoveryScore(
   }
 }
 
+// Daily Plan Generator
+interface DailyPlanTask {
+  id: string;
+  title: string;
+  type: 'workout' | 'recovery' | 'nutrition' | 'sleep';
+  completed: boolean;
+  time?: string;
+  duration?: string;
+  description?: string;
+}
+
+interface DailyPlanResponse {
+  greeting: string;
+  date: string;
+  tasks: DailyPlanTask[];
+  motivation: string;
+}
+
+export async function generateDailyPlanAI(activities: DBActivity[]): Promise<DailyPlanResponse> {
+  const now = new Date();
+  const hour = now.getHours();
+  let greeting = 'Сайн байна уу';
+  if (hour < 6) greeting = 'Сайхан амраарай';
+  else if (hour < 12) greeting = 'Өглөөний мэнд';
+  else if (hour < 18) greeting = 'Өдрийн мэнд';
+  else if (hour < 22) greeting = 'Оройн мэнд';
+  else greeting = 'Сайхан амраарай';
+
+  const date = now.toLocaleDateString('mn-MN', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  // Analyze recent activities
+  const threeDaysAgo = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
+  const recentActivities = activities.filter(a => new Date(a.start_date) >= threeDaysAgo);
+  const recentLoad = recentActivities.reduce((sum, a) => sum + (a.distance / 1000), 0);
+  
+  const lastActivity = activities[0];
+  const daysSinceLastActivity = lastActivity
+    ? Math.floor((now.getTime() - new Date(lastActivity.start_date).getTime()) / (24 * 60 * 60 * 1000))
+    : 7;
+
+  // Determine today's focus based on recent activity
+  let fallbackTasks: DailyPlanTask[] = [];
+  if (daysSinceLastActivity >= 3 || recentLoad < 5) {
+    fallbackTasks = [
+      { id: '1', title: 'Өглөөний сунгалт', type: 'recovery', completed: false, time: '07:00', duration: '10 мин', description: 'Бүх булчинг сунгах' },
+      { id: '2', title: 'Гүйлт эсвэл алхалт', type: 'workout', completed: false, time: '08:00', duration: '30-40 мин', description: 'Хөнгөн темпээр' },
+      { id: '3', title: 'Уураг ихтэй хоол', type: 'nutrition', completed: false, time: '12:00', description: 'Булчин сэргээх' },
+      { id: '4', title: '7-8 цаг унтах', type: 'sleep', completed: false, time: '22:00' },
+    ];
+  } else if (recentLoad > 20) {
+    fallbackTasks = [
+      { id: '1', title: 'Хөнгөн сунгалт', type: 'recovery', completed: false, time: '08:00', duration: '15 мин', description: 'Булчин сулруулах' },
+      { id: '2', title: 'Амралтын өдөр', type: 'recovery', completed: false, description: 'Идэвхтэй амралт' },
+      { id: '3', title: 'Ус уух (2+ литр)', type: 'nutrition', completed: false, description: 'Гидратаци хадгалах' },
+      { id: '4', title: 'Эрт унтах', type: 'sleep', completed: false, time: '21:30', description: '8+ цаг унтах' },
+    ];
+  } else {
+    fallbackTasks = [
+      { id: '1', title: 'Өглөөний сунгалт', type: 'recovery', completed: false, time: '07:00', duration: '10 мин' },
+      { id: '2', title: 'Дасгал хийх', type: 'workout', completed: false, time: '08:00', duration: '45 мин', description: 'Дунд зэргийн эрчим' },
+      { id: '3', title: 'Тэнцвэртэй хоол', type: 'nutrition', completed: false, time: '12:00' },
+      { id: '4', title: 'Оройн сунгалт', type: 'recovery', completed: false, time: '20:00', duration: '10 мин' },
+    ];
+  }
+
+  const motivations = [
+    'Бага алхамууд том өөрчлөлтийг авчирна!',
+    'Өнөөдрийн хүчин чармайлт маргааш үр дүнгээ өгнө.',
+    'Өөрийгөө сорь, хязгаараа тэлэ!',
+    'Тууштай байвал зорилгодоо хүрнэ.',
+    'Жижиг алхам ч том ялалт руу хөтөлнө.',
+    'Өнөөдөр эхэлснээр маргааш бэлэн болно.',
+    'Хамгийн хэцүү алхам бол эхний алхам.',
+  ];
+
+  const fallbackMotivation = motivations[Math.floor(Math.random() * motivations.length)];
+
+  if (!process.env.GROQ_API_KEY) {
+    return {
+      greeting,
+      date,
+      tasks: fallbackTasks,
+      motivation: fallbackMotivation,
+    };
+  }
+
+  try {
+    const recentSummary = activities.slice(0, 5).map((a) => {
+      const d = new Date(a.start_date).toLocaleDateString('mn-MN', { month: 'short', day: 'numeric' });
+      return `- ${d}: ${(a.distance / 1000).toFixed(1)}км, ${Math.floor(a.moving_time / 60)}мин`;
+    }).join('\n');
+
+    const prompt = `
+Тамирчны өнөөдрийн AI checklist төлөвлөгөө гарга.
+
+Контекст:
+- Сүүлийн 3 хоногийн ачаалал: ${recentLoad.toFixed(1)} км
+- Сүүлийн дасгалаас хойш: ${daysSinceLastActivity} өдөр
+- Сүүлийн дасгалууд:
+${recentSummary || '- Мэдээлэл багатай'}
+
+Тэмдэглэл:
+- Төлөвлөгөө нь бодитой, богино, хэрэгжүүлэхэд хялбар байх
+- 4-6 task буцаа
+- Task бүр type-тэй байх: workout | recovery | nutrition | sleep
+- Монгол хэлээр бич
+
+JSON форматаар ЗӨВХӨН дараах бүтэцтэй буцаа:
+{
+  "motivation": "...",
+  "tasks": [
+    {
+      "title": "...",
+      "type": "workout",
+      "time": "07:30",
+      "duration": "40 мин",
+      "description": "..."
+    }
+  ]
+}`;
+
+    const completion = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        {
+          role: 'system',
+          content: 'Та мэргэжлийн AI дасгалжуулагч. JSON-аас өөр текст бүү бич. Монгол хэлээр буцаа.',
+        },
+        { role: 'user', content: prompt },
+      ],
+      temperature: 0.4,
+      max_tokens: 700,
+    });
+
+    const content = completion.choices[0]?.message?.content?.trim() || '';
+    const clean = content.replace(/^```json\s*/i, '').replace(/```$/, '').trim();
+    const parsed = JSON.parse(clean) as { motivation?: string; tasks?: Array<Partial<DailyPlanTask>> };
+
+    const tasks = (parsed.tasks || []).slice(0, 6).map((task, index) => ({
+      id: String(index + 1),
+      title: task.title?.trim() || `Даалгавар ${index + 1}`,
+      type: (task.type === 'workout' || task.type === 'recovery' || task.type === 'nutrition' || task.type === 'sleep')
+        ? task.type
+        : 'workout',
+      completed: false,
+      time: task.time?.trim(),
+      duration: task.duration?.trim(),
+      description: task.description?.trim(),
+    }));
+
+    return {
+      greeting,
+      date,
+      tasks: tasks.length > 0 ? tasks : fallbackTasks,
+      motivation: parsed.motivation?.trim() || fallbackMotivation,
+    };
+  } catch (error) {
+    console.error('Daily plan AI parse error:', error);
+    return {
+      greeting,
+      date,
+      tasks: fallbackTasks,
+      motivation: fallbackMotivation,
+    };
+  }
+}
+
 // Smart Goal Suggestions
 export async function suggestGoals(activities: DBActivity[]): Promise<string> {
   try {

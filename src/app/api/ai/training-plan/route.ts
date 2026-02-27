@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getUserByStravaId, getActivitiesByUserId, getGoalsByUserId } from '@/lib/db';
 import { generateTrainingPlan, TrainingPlanOptions } from '@/lib/groq';
 import { startOfWeek, startOfMonth, differenceInDays, endOfWeek, endOfMonth } from 'date-fns';
+import { DBActivity, DBGoal } from '@/types';
 
 // Calculate goal progress
-function calculateGoalProgress(goal: any, activities: any[]) {
+function calculateGoalProgress(goal: DBGoal, activities: DBActivity[]) {
   const now = new Date();
   let periodStart: Date;
   let periodEnd: Date;
@@ -49,6 +50,28 @@ function calculateGoalProgress(goal: any, activities: any[]) {
   };
 }
 
+function extractChecklistFromPlan(plan: string) {
+  const lines = plan.split('\n').map((line) => line.trim()).filter(Boolean);
+  const items = lines
+    .filter((line) => /^(?:Өдөр|Day)\s*\d+/i.test(line) || /^\d+[-.]\s/.test(line))
+    .slice(0, 14)
+    .map((line, index) => ({
+      id: `task-${index + 1}`,
+      title: line.replace(/^[-*]\s*/, ''),
+      completed: false,
+    }));
+
+  if (items.length > 0) {
+    return items;
+  }
+
+  return [
+    { id: 'task-1', title: 'Өнөөдрийн үндсэн дасгалаа хий', completed: false },
+    { id: 'task-2', title: 'Сэргэлтийн сунгалт 10-15 минут', completed: false },
+    { id: 'task-3', title: 'Ус, хоол, унтлагын дэглэмээ баримтал', completed: false },
+  ];
+}
+
 export async function POST(request: NextRequest) {
   const stravaUserId = request.cookies.get('strava_user_id')?.value;
 
@@ -89,7 +112,9 @@ export async function POST(request: NextRequest) {
     // Generate training plan with options
     const plan = await generateTrainingPlan(activities, goalsWithProgress, options);
 
-    return NextResponse.json({ plan });
+    const checklist = extractChecklistFromPlan(plan);
+
+    return NextResponse.json({ plan, checklist });
   } catch (err) {
     console.error('Training plan error:', err);
     return NextResponse.json({ error: 'Failed to generate training plan' }, { status: 500 });

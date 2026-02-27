@@ -62,7 +62,7 @@ export default function GoalsPage() {
     <div className="min-h-screen">
       <DashboardHeader athlete={athlete} title="Зорилго" />
       
-      <div className="p-6 space-y-6">
+      <div className="page-container section-stack py-6">
         {/* Add Goal Button / Form */}
         {showForm ? (
           <GoalForm
@@ -72,7 +72,7 @@ export default function GoalsPage() {
         ) : (
           <button
             onClick={() => setShowForm(true)}
-            className="w-full py-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl text-gray-500 dark:text-gray-400 hover:border-[#FC4C02] hover:text-[#FC4C02] transition-colors flex items-center justify-center gap-2"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border py-4 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -83,11 +83,11 @@ export default function GoalsPage() {
 
         {/* Weekly Goals */}
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+          <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-foreground">
             <span>📅</span> Долоо хоногийн зорилго
           </h2>
           {weeklyGoals.length === 0 ? (
-            <p className="text-gray-500 dark:text-gray-400 text-center py-8 bg-white dark:bg-gray-800 rounded-xl">
+            <p className="rounded-xl bg-card py-8 text-center text-muted-foreground">
               Долоо хоногийн зорилго тавиагүй байна. Дээрээс нэмнэ үү!
             </p>
           ) : (
@@ -105,11 +105,11 @@ export default function GoalsPage() {
 
         {/* Monthly Goals */}
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+          <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-foreground">
             <span>📆</span> Сарын зорилго
           </h2>
           {monthlyGoals.length === 0 ? (
-            <p className="text-gray-500 dark:text-gray-400 text-center py-8 bg-white dark:bg-gray-800 rounded-xl">
+            <p className="rounded-xl bg-card py-8 text-center text-muted-foreground">
               Сарын зорилго тавиагүй байна. Дээрээс нэмнэ үү!
             </p>
           ) : (

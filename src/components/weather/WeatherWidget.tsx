@@ -38,7 +38,7 @@ export default function WeatherWidget({ compact = false }: WeatherWidgetProps) {
 
   if (loading) {
     return (
-      <Card>
+      <Card className="border-border/80 shadow-sm">
         <CardContent className={`${compact ? 'p-4' : 'p-6'}`}>
         <div className="flex items-center gap-3">
           <div className="h-12 w-12 animate-pulse rounded-full bg-muted" />
@@ -54,7 +54,7 @@ export default function WeatherWidget({ compact = false }: WeatherWidgetProps) {
 
   if (error || !weather) {
     return (
-      <Card>
+      <Card className="border-border/80 shadow-sm">
         <CardContent className={`${compact ? 'p-4' : 'p-6'}`}>
         <div className="flex items-center gap-3 text-muted-foreground">
           <span className="text-2xl">🌡️</span>
@@ -70,7 +70,7 @@ export default function WeatherWidget({ compact = false }: WeatherWidgetProps) {
 
   if (compact) {
     return (
-      <Card>
+      <Card className="border-border/80 shadow-sm">
         <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -103,8 +103,8 @@ export default function WeatherWidget({ compact = false }: WeatherWidgetProps) {
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="border-border/80 shadow-sm">
+      <CardHeader className="pb-2.5">
       <div className="flex items-center justify-between">
         <CardTitle className="flex items-center gap-2">
           <span>🌤️</span> Цаг агаар

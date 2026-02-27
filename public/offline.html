@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#FC4C02">
+  <title>Офлайн - Strava Tracker</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #fff5f0 0%, #ffffff 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .container {
+      text-align: center;
+      max-width: 400px;
+    }
+    
+    .icon {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 24px;
+      background: linear-gradient(135deg, #FC4C02 0%, #f97316 100%);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 40px rgba(252, 76, 2, 0.3);
+    }
+    
+    .icon svg {
+      width: 60px;
+      height: 60px;
+      fill: white;
+    }
+    
+    h1 {
+      font-size: 24px;
+      color: #1a1a1a;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+    
+    p {
+      color: #666;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    
+    .retry-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #FC4C02;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .retry-btn:hover {
+      background: #e34402;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(252, 76, 2, 0.4);
+    }
+    
+    .retry-btn:active {
+      transform: translateY(0);
+    }
+    
+    .status {
+      margin-top: 32px;
+      padding: 16px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #ef4444;
+      border-radius: 50%;
+      margin-right: 8px;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">
+      <svg viewBox="0 0 24 24">
+        <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7.03 13.828h4.169"/>
+      </svg>
+    </div>
+    
+    <h1>Интернэт холболтгүй байна</h1>
+    <p>Одоогоор офлайн байна. Интернэт холболтоо шалгаад дахин оролдоно уу.</p>
+    
+    <button class="retry-btn" onclick="window.location.reload()">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h4M20 20v-5h-4m3.4-6A8 8 0 006.3 8M17.7 16A8 8 0 017 19"/>
+      </svg>
+      Дахин оролдох
+    </button>
+    
+    <div class="status">
+      <span class="status-dot"></span>
+      Холболт хүлээж байна...
+    </div>
+  </div>
+  
+  <script>
+    // Auto-retry when online
+    window.addEventListener('online', () => {
+      window.location.reload();
+    });
+  </script>
+</body>
+</html>

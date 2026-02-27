@@ -195,7 +195,7 @@ export default function ActivityModal({
                     </div>
                   ) : (
                     <p className="text-gray-500 dark:text-gray-400 text-sm">
-                      "Шинжлэх" товчийг дарж энэ дасгалын талаар AI зөвлөмж аваарай.
+                      &quot;Шинжлэх&quot; товчийг дарж энэ дасгалын талаар AI зөвлөмж аваарай.
                     </p>
                   )}
                 </div>

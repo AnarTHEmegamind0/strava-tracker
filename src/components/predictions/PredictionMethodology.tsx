@@ -267,7 +267,7 @@ export default function PredictionMethodology() {
               </li>
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
-                Долоо хоногт нэг удаа "бүх хүчээрээ" гүйлт оруул
+                Долоо хоногт нэг удаа &quot;бүх хүчээрээ&quot; гүйлт оруул
               </li>
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-white/60" />

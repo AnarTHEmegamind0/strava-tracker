@@ -1,24 +1,36 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fcfdff;
-  --foreground: #0f172a;
+  /* Clean white & warm orange palette */
+  --background: #fafafa;
+  --foreground: #18181b;
   --card: #ffffff;
-  --card-foreground: #0f172a;
-  --muted: #f4f7fb;
-  --muted-foreground: #64748b;
-  --border: #e8edf4;
-  --input: #e8edf4;
+  --card-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  
+  /* Strava Orange - Primary */
   --primary: #fc4c02;
   --primary-foreground: #ffffff;
-  --secondary: #fff1eb;
-  --secondary-foreground: #9a3412;
-  --accent: #f97316;
+  
+  /* Warm secondary */
+  --secondary: #fff7ed;
+  --secondary-foreground: #c2410c;
+  
+  /* Orange accent */
+  --accent: #fb923c;
   --accent-foreground: #ffffff;
-  --ring: #fb923c;
-  --success: #16a34a;
-  --warning: #d97706;
-  --danger: #dc2626;
+  
+  --ring: #fc4c02;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  
+  /* Glass effect */
+  --glass: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.2);
 }
 
 @theme inline {
@@ -45,24 +57,26 @@
 }
 
 html.dark {
-  --background: #020617;
-  --foreground: #e2e8f0;
-  --card: #0f172a;
-  --card-foreground: #e2e8f0;
-  --muted: #111827;
-  --muted-foreground: #94a3b8;
-  --border: #1f2937;
-  --input: #1f2937;
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #18181b;
+  --card-foreground: #fafafa;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --border: #27272a;
+  --input: #27272a;
   --primary: #fc4c02;
   --primary-foreground: #ffffff;
-  --secondary: #3f1d12;
+  --secondary: #292524;
   --secondary-foreground: #fdba74;
   --accent: #fb923c;
-  --accent-foreground: #0b1220;
-  --ring: #fb923c;
+  --accent-foreground: #18181b;
+  --ring: #fc4c02;
   --success: #22c55e;
   --warning: #f59e0b;
   --danger: #ef4444;
+  --glass: rgba(24, 24, 27, 0.8);
+  --glass-border: rgba(39, 39, 42, 0.5);
 }
 
 * {
@@ -71,6 +85,7 @@ html.dark {
 
 html {
   color-scheme: light;
+  scroll-behavior: smooth;
 }
 
 html.dark {
@@ -81,13 +96,23 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Beautiful gradient background */
 html:not(.dark) body {
   background:
-    radial-gradient(circle at 12% -8%, color-mix(in srgb, var(--primary) 2.8%, white) 0%, transparent 40%),
-    radial-gradient(circle at 100% 0%, color-mix(in srgb, #60a5fa 3%, white) 0%, transparent 34%),
-    var(--background);
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(252, 76, 2, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(251, 146, 60, 0.06) 0%, transparent 40%),
+    linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+}
+
+html.dark body {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(252, 76, 2, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(251, 146, 60, 0.08) 0%, transparent 40%),
+    linear-gradient(180deg, #09090b 0%, #18181b 100%);
 }
 
 :focus-visible {
@@ -96,9 +121,128 @@ html:not(.dark) body {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--primary) 18%, transparent);
+  background: color-mix(in srgb, var(--primary) 25%, transparent);
 }
 
 .text-balance {
   text-wrap: balance;
 }
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 3px;
+  opacity: 0.5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground);
+}
+
+/* Smooth animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out forwards;
+}
+
+/* Glass morphism */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+}
+
+/* Safe area for mobile */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+/* Hide scrollbar for mobile nav */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Shared layout rhythm */
+.page-container {
+  width: min(100%, 1200px);
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 768px) {
+  .page-container {
+    padding-inline: 1.5rem;
+  }
+}
+
+.section-stack {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .section-stack {
+    gap: 1.5rem;
+  }
+}
+
+/* Legacy neutral color bridge (keeps old components theme-consistent) */
+.bg-white { background-color: var(--card); }
+.bg-gray-50 { background-color: color-mix(in srgb, var(--muted) 55%, var(--background)); }
+.text-gray-900 { color: var(--foreground); }
+.text-gray-700,
+.text-gray-600,
+.text-gray-500,
+.text-gray-400 { color: var(--muted-foreground); }
+.border-gray-300,
+.border-gray-200,
+.border-gray-100 { border-color: var(--border); }
+
+html.dark .dark\:bg-gray-900 { background-color: var(--background); }
+html.dark .dark\:bg-gray-800,
+html.dark .dark\:bg-gray-700,
+html.dark .dark\:bg-gray-700\/50 { background-color: var(--card); }
+html.dark .dark\:text-white { color: var(--foreground); }
+html.dark .dark\:text-gray-400,
+html.dark .dark\:text-gray-300,
+html.dark .dark\:text-gray-200 { color: var(--muted-foreground); }
+html.dark .dark\:border-gray-700,
+html.dark .dark\:border-gray-600 { border-color: var(--border); }

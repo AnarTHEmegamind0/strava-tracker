@@ -1,6 +1,6 @@
 {
-  "name": "Strava Tracker",
-  "short_name": "Strava",
+  "name": "Strava Buster",
+  "short_name": "Buster",
   "description": "AI-тэй дасгалын хянах самбар - Strava холболттой",
   "start_url": "/dashboard",
   "display": "standalone",
@@ -58,22 +58,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshots/dashboard.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Dashboard"
-    },
-    {
-      "src": "/screenshots/mobile.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Mobile Dashboard"
     }
   ],
   "shortcuts": [

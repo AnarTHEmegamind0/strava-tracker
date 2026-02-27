@@ -12,7 +12,7 @@ import PaceZones from '@/components/statistics/PaceZones';
 import StravaStats from '@/components/statistics/StravaStats';
 import TrainingLoad from '@/components/statistics/TrainingLoad';
 import WorkoutBreakdown from '@/components/statistics/WorkoutBreakdown';
-import { WeeklyStats, ActivityTypeBreakdown, PersonalRecord, DBActivity } from '@/types';
+import { WeeklyStats, ActivityTypeBreakdown, PersonalRecord } from '@/types';
 
 interface StatsData {
   weeklyStats: WeeklyStats;
@@ -182,18 +182,18 @@ export default function StatisticsPage() {
     <div className="min-h-screen">
       <DashboardHeader athlete={athlete} title="Статистик" />
       
-      <div className="p-6 space-y-6">
+      <div className="page-container section-stack py-4 md:py-6">
         {/* Period Filter */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm text-gray-500 dark:text-gray-400 mr-2">Хугацаа:</span>
-            
+        <div className="rounded-xl border border-border/70 bg-card p-3 shadow-sm sm:p-4">
+          <div className="mb-2 text-sm text-muted-foreground">Хугацаа:</div>
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
+
             <button
               onClick={() => { setPeriod('week'); setShowCustomPicker(false); }}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
+              className={`min-w-0 px-3 py-2 rounded-lg font-medium transition-colors text-xs sm:flex-none sm:px-4 sm:text-sm ${
                 period === 'week'
                   ? 'bg-[#FC4C02] text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
             >
               Энэ долоо хоног
@@ -201,10 +201,10 @@ export default function StatisticsPage() {
             
             <button
               onClick={() => { setPeriod('month'); setShowCustomPicker(false); }}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
+              className={`min-w-0 px-3 py-2 rounded-lg font-medium transition-colors text-xs sm:flex-none sm:px-4 sm:text-sm ${
                 period === 'month'
                   ? 'bg-[#FC4C02] text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
             >
               Энэ сар
@@ -212,10 +212,10 @@ export default function StatisticsPage() {
             
             <button
               onClick={() => { setPeriod('year'); setShowCustomPicker(false); }}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
+              className={`min-w-0 px-3 py-2 rounded-lg font-medium transition-colors text-xs sm:flex-none sm:px-4 sm:text-sm ${
                 period === 'year'
                   ? 'bg-[#FC4C02] text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
             >
               Энэ жил
@@ -223,10 +223,10 @@ export default function StatisticsPage() {
             
             <button
               onClick={() => { setPeriod('custom'); setShowCustomPicker(true); }}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm flex items-center gap-2 ${
+              className={`col-span-2 px-3 py-2 rounded-lg font-medium transition-colors text-xs flex items-center justify-center gap-2 sm:w-auto sm:px-4 sm:text-sm ${
                 period === 'custom'
                   ? 'bg-[#FC4C02] text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -238,25 +238,25 @@ export default function StatisticsPage() {
 
           {/* Custom Date Picker */}
           {showCustomPicker && period === 'custom' && (
-            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-              <div className="flex flex-wrap items-center gap-4">
-                <div>
-                  <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Эхлэх огноо</label>
+            <div className="mt-4 border-t border-border/70 pt-4">
+              <div className="grid gap-3 sm:grid-cols-[1fr_auto_1fr] sm:items-end">
+                <div className="min-w-0">
+                  <label className="mb-1 block text-xs text-muted-foreground">Эхлэх огноо</label>
                   <input
                     type="date"
                     value={customStartDate}
                     onChange={(e) => setCustomStartDate(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-[#FC4C02] focus:border-transparent"
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:border-transparent focus:ring-2 focus:ring-[#FC4C02]"
                   />
                 </div>
-                <div className="text-gray-400">→</div>
-                <div>
-                  <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Дуусах огноо</label>
+                <div className="hidden text-center text-muted-foreground sm:block">→</div>
+                <div className="min-w-0">
+                  <label className="mb-1 block text-xs text-muted-foreground">Дуусах огноо</label>
                   <input
                     type="date"
                     value={customEndDate}
                     onChange={(e) => setCustomEndDate(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-[#FC4C02] focus:border-transparent"
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:border-transparent focus:ring-2 focus:ring-[#FC4C02]"
                   />
                 </div>
               </div>
@@ -264,79 +264,97 @@ export default function StatisticsPage() {
           )}
 
           {/* Date Range Display */}
-          <div className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+          <div className="mt-3 text-sm text-muted-foreground">
             📅 {formatDateRange(rangeStart, rangeEnd)} • {filteredActivities.length} дасгал
           </div>
         </div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-          <div className="bg-gradient-to-br from-orange-500 to-red-500 rounded-xl p-4 text-white">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="min-w-0 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl p-4 text-white">
             <p className="text-sm opacity-80">Зай</p>
-            <p className="text-2xl font-bold">{(filteredStats.total_distance / 1000).toFixed(1)} км</p>
+            <p className="text-xl font-bold sm:text-2xl">{(filteredStats.total_distance / 1000).toFixed(1)} км</p>
           </div>
-          <div className="bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl p-4 text-white">
+          <div className="min-w-0 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl p-4 text-white">
             <p className="text-sm opacity-80">Хугацаа</p>
-            <p className="text-2xl font-bold">
+            <p className="text-xl font-bold sm:text-2xl">
               {Math.floor(filteredStats.total_time / 3600)}ц {Math.floor((filteredStats.total_time % 3600) / 60)}м
             </p>
           </div>
-          <div className="bg-gradient-to-br from-green-500 to-teal-500 rounded-xl p-4 text-white">
+          <div className="min-w-0 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl p-4 text-white">
             <p className="text-sm opacity-80">Өндөрлөг</p>
-            <p className="text-2xl font-bold">{Math.round(filteredStats.total_elevation)} м</p>
+            <p className="text-xl font-bold sm:text-2xl">{Math.round(filteredStats.total_elevation)} м</p>
           </div>
-          <div className="bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl p-4 text-white">
+          <div className="min-w-0 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl p-4 text-white">
             <p className="text-sm opacity-80">Дасгал</p>
-            <p className="text-2xl font-bold">{filteredStats.activity_count}</p>
+            <p className="text-xl font-bold sm:text-2xl">{filteredStats.activity_count}</p>
           </div>
-          <div className="bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl p-4 text-white">
+          <div className="min-w-0 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl p-4 text-white">
             <p className="text-sm opacity-80">Калори</p>
-            <p className="text-2xl font-bold">{Math.round(filteredStats.total_calories).toLocaleString()}</p>
+            <p className="text-xl font-bold sm:text-2xl">{Math.round(filteredStats.total_calories).toLocaleString()}</p>
           </div>
         </div>
 
         {/* AI Analysis Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
           {/* Training Load */}
-          <TrainingLoad />
+          <div className="min-w-0">
+            <TrainingLoad />
+          </div>
 
           {/* Workout Breakdown */}
-          <WorkoutBreakdown activities={filteredActivities} />
+          <div className="min-w-0">
+            <WorkoutBreakdown activities={filteredActivities} />
+          </div>
         </div>
 
         {/* Charts Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
           {/* Strava Stats */}
-          <StravaStats />
+          <div className="min-w-0">
+            <StravaStats />
+          </div>
 
           {/* Week Comparison */}
           {statsData?.weekComparison && (
-            <WeekComparison
-              thisWeek={statsData.weekComparison.thisWeek}
-              changes={statsData.weekComparison.changes}
-            />
+            <div className="min-w-0">
+              <WeekComparison
+                thisWeek={statsData.weekComparison.thisWeek}
+                changes={statsData.weekComparison.changes}
+              />
+            </div>
           )}
 
           {/* Activity Type Breakdown - using filtered data */}
           {filteredBreakdown.length > 0 && (
-            <ActivityTypeChart data={filteredBreakdown} />
+            <div className="min-w-0">
+              <ActivityTypeChart data={filteredBreakdown} />
+            </div>
           )}
         </div>
 
         {/* Distance Chart */}
         {statsData?.weeklyHistory && statsData.weeklyHistory.length > 0 && (
-          <DistanceChart data={statsData.weeklyHistory} />
+          <div className="min-w-0">
+            <DistanceChart data={statsData.weeklyHistory} />
+          </div>
         )}
 
         {/* Activity Heatmap - using filtered activities */}
-        <ActivityHeatmap activities={filteredActivities} />
+        <div className="min-w-0">
+          <ActivityHeatmap activities={filteredActivities} />
+        </div>
 
         {/* Pace Zones - using filtered activities */}
-        <PaceZones activities={filteredActivities} />
+        <div className="min-w-0">
+          <PaceZones activities={filteredActivities} />
+        </div>
 
         {/* Personal Records */}
         {statsData?.personalRecords && (
-          <PersonalRecords records={statsData.personalRecords} />
+          <div className="min-w-0">
+            <PersonalRecords records={statsData.personalRecords} />
+          </div>
         )}
       </div>
     </div>

@@ -174,17 +174,14 @@ export default function Sidebar({ athleteName }: SidebarProps) {
               isCollapsed && 'justify-center px-0',
             )}
           >
-            <div className="grid h-9 w-9 place-items-center rounded-lg bg-primary/10 text-primary">
+            <div className="grid h-9 w-9 place-items-center rounded-lg bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7.03 13.828h4.169" />
               </svg>
             </div>
             {!isCollapsed && (
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-foreground">Strava Tracker</p>
-                <p className="truncate text-xs text-muted-foreground">
-                  {athleteName || 'Дасгалын тэмдэглэл'}
-                </p>
+                <p className="truncate text-sm font-semibold text-foreground">Strava Buster</p>
               </div>
             )}
           </Link>
@@ -245,13 +242,13 @@ export default function Sidebar({ athleteName }: SidebarProps) {
     <>
       <div className="fixed inset-x-0 top-0 z-40 flex h-14 items-center justify-between border-b border-border bg-card/95 px-4 backdrop-blur md:hidden">
         <Link href="/dashboard" className="flex items-center gap-2">
-          <div className="grid h-8 w-8 place-items-center rounded-md bg-primary/10 text-primary">
+          <div className="grid h-8 w-8 place-items-center rounded-md bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7.03 13.828h4.169" />
             </svg>
           </div>
           <div>
-            <p className="text-sm font-semibold">Strava Tracker</p>
+            <p className="text-sm font-semibold">Strava Buster</p>
             <p className="text-[11px] text-muted-foreground">Дасгалын тэмдэглэл</p>
           </div>
         </Link>

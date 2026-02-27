@@ -60,7 +60,7 @@ function getIcon(type: string): string {
 export default function PersonalRecords({ records }: PersonalRecordsProps) {
   if (records.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm sm:p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
           Хувийн рекордууд
         </h3>
@@ -80,7 +80,7 @@ export default function PersonalRecords({ records }: PersonalRecordsProps) {
   );
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm sm:p-6">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
         Хувийн рекордууд
       </h3>
@@ -91,11 +91,11 @@ export default function PersonalRecords({ records }: PersonalRecordsProps) {
           <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wide">
             Зайн рекордууд
           </h4>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {distancePRs.map((record, index) => (
               <div
                 key={index}
-                className="flex flex-col p-4 rounded-lg bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border border-orange-100 dark:border-orange-800/30"
+                className="flex min-w-0 flex-col rounded-lg border border-orange-100 bg-gradient-to-br from-orange-50 to-red-50 p-4 dark:border-orange-800/30 dark:from-orange-900/20 dark:to-red-900/20"
               >
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xl">{getIcon(record.type)}</span>
@@ -103,7 +103,7 @@ export default function PersonalRecords({ records }: PersonalRecordsProps) {
                     {record.type}
                   </span>
                 </div>
-                <p className="text-2xl font-bold text-[#FC4C02] mb-1">
+                <p className="mb-1 text-xl font-bold text-[#FC4C02] sm:text-2xl">
                   {formatValue(record.type, record.value)}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
@@ -130,9 +130,9 @@ export default function PersonalRecords({ records }: PersonalRecordsProps) {
             {otherRecords.map((record, index) => (
               <div
                 key={index}
-                className="flex items-center gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50"
+                className="flex flex-col gap-3 rounded-lg bg-gray-50 p-3 sm:flex-row sm:items-center sm:gap-4 dark:bg-gray-700/50"
               >
-                <span className="text-2xl">{getIcon(record.type)}</span>
+                <span className="text-2xl sm:shrink-0">{getIcon(record.type)}</span>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-gray-900 dark:text-white">
                     {record.type}
@@ -141,8 +141,8 @@ export default function PersonalRecords({ records }: PersonalRecordsProps) {
                     {record.activity_name}
                   </p>
                 </div>
-                <div className="text-right">
-                  <p className="text-lg font-bold text-[#FC4C02]">
+                <div className="text-left sm:text-right">
+                  <p className="text-base font-bold text-[#FC4C02] sm:text-lg">
                     {formatValue(record.type, record.value)}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">

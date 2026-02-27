@@ -14,12 +14,12 @@ export default function DistanceChart({ data }: DistanceChartProps) {
   }));
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+    <div className="rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800 sm:p-6">
+      <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
         Зайн өөрчлөлт
       </h3>
       
-      <div className="h-64">
+      <div className="h-56 sm:h-64">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
@@ -27,12 +27,14 @@ export default function DistanceChart({ data }: DistanceChartProps) {
               dataKey="week" 
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#9CA3AF', fontSize: 12 }}
+              tick={{ fill: '#9CA3AF', fontSize: 11 }}
+              interval="preserveStartEnd"
             />
             <YAxis 
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#9CA3AF', fontSize: 12 }}
+              width={36}
+              tick={{ fill: '#9CA3AF', fontSize: 11 }}
               tickFormatter={(value) => `${value}км`}
             />
             <Tooltip

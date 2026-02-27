@@ -78,8 +78,8 @@ export default function RecentActivities({ activities }: RecentActivitiesProps) 
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="border-border/80 shadow-sm">
+      <CardHeader className="pb-2.5">
         <div className="flex items-center justify-between gap-3">
           <CardTitle>Сүүлийн дасгалууд</CardTitle>
         <Link
@@ -91,12 +91,12 @@ export default function RecentActivities({ activities }: RecentActivitiesProps) 
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-2">
+      <CardContent className="space-y-2.5">
         {recentActivities.map((activity) => (
           <Link
             key={activity.strava_id}
             href={`/activity/${activity.strava_id}`}
-            className="flex cursor-pointer items-center gap-4 rounded-lg border border-transparent p-3 transition-colors hover:border-border hover:bg-muted/60"
+            className="flex cursor-pointer items-center gap-4 rounded-xl border border-transparent p-3.5 transition-colors hover:border-border hover:bg-muted/60"
           >
             <span className="text-2xl">{getActivityIcon(activity.type)}</span>
             <div className="flex-1 min-w-0">

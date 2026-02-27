@@ -63,8 +63,8 @@ export default function RecoveryScore() {
 
   if (loading) {
     return (
-      <Card>
-        <CardHeader className="pb-3">
+      <Card className="border-border/80 shadow-sm">
+        <CardHeader className="pb-2.5">
           <CardTitle className="flex items-center gap-3">
             <span className="text-xl">🔋</span>
             Сэргээлт
@@ -79,8 +79,8 @@ export default function RecoveryScore() {
 
   if (!data) {
     return (
-      <Card>
-        <CardHeader className="pb-3">
+      <Card className="border-border/80 shadow-sm">
+        <CardHeader className="pb-2.5">
           <CardTitle className="flex items-center gap-3">
             <span className="text-xl">🔋</span>
             Сэргээлт
@@ -99,8 +99,8 @@ export default function RecoveryScore() {
   const offset = circumference - progress;
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="border-border/80 shadow-sm">
+      <CardHeader className="pb-2.5">
         <CardTitle className="flex items-center gap-3">
           <span className="text-xl">🔋</span>
           Сэргээлтийн оноо

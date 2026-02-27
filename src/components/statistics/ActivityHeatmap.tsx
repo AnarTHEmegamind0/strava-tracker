@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { DBActivity } from '@/types';
-import { format, subDays, startOfWeek, eachDayOfInterval, getDay, subYears } from 'date-fns';
+import { format, startOfWeek, eachDayOfInterval, getDay, subYears } from 'date-fns';
 
 interface ActivityHeatmapProps {
   activities: DBActivity[];
@@ -22,7 +22,7 @@ export default function ActivityHeatmap({ activities }: ActivityHeatmapProps) {
   const [tooltip, setTooltip] = useState<{ date: string; value: number; count: number; x: number; y: number } | null>(null);
 
   // Calculate heatmap data for last 365 days
-  const { heatmapData, maxValue, weeks, totalDistance, totalActivities } = useMemo(() => {
+  const { maxValue, weeks, totalDistance, totalActivities } = useMemo(() => {
     const today = new Date();
     const oneYearAgo = subYears(today, 1);
     
@@ -78,7 +78,6 @@ export default function ActivityHeatmap({ activities }: ActivityHeatmapProps) {
     });
 
     return {
-      heatmapData: activityMap,
       maxValue: max,
       weeks: weekData,
       totalDistance: total / 1000,
@@ -109,75 +108,79 @@ export default function ActivityHeatmap({ activities }: ActivityHeatmapProps) {
   const dayLabels = ['Ня', 'Да', 'Мя', 'Лх', 'Пү', 'Ба', 'Бя'];
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-      <div className="flex items-center justify-between mb-4">
+    <div className="rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800 sm:p-6">
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           Дасгалын хуваарь
         </h3>
-        <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+        <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
           <span>{totalActivities} дасгал</span>
           <span>Нийт {totalDistance.toFixed(0)} км</span>
         </div>
       </div>
 
-      {/* Month Labels */}
-      <div className="flex mb-1 ml-8">
-        {months.map((month, i) => (
-          <div
-            key={i}
-            className="text-xs text-gray-400 dark:text-gray-500"
-            style={{ marginLeft: i === 0 ? `${month.week * 12}px` : `${(month.week - months[i - 1].week - 1) * 12}px` }}
-          >
-            {month.name}
+      <div className="overflow-x-auto pb-1">
+        <div className="min-w-[720px]">
+          {/* Month Labels */}
+          <div className="mb-1 ml-8 flex">
+            {months.map((month, i) => (
+              <div
+                key={i}
+                className="text-xs text-gray-400 dark:text-gray-500"
+                style={{ marginLeft: i === 0 ? `${month.week * 12}px` : `${(month.week - months[i - 1].week - 1) * 12}px` }}
+              >
+                {month.name}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      {/* Heatmap Grid */}
-      <div className="flex">
-        {/* Day Labels */}
-        <div className="flex flex-col gap-[2px] mr-2 text-xs text-gray-400 dark:text-gray-500">
-          {dayLabels.map((day, i) => (
-            <div key={day} className="h-[10px] leading-[10px]" style={{ visibility: i % 2 === 1 ? 'visible' : 'hidden' }}>
-              {day}
+          {/* Heatmap Grid */}
+          <div className="flex">
+            {/* Day Labels */}
+            <div className="mr-2 flex flex-col gap-[2px] text-xs text-gray-400 dark:text-gray-500">
+              {dayLabels.map((day, i) => (
+                <div key={day} className="h-[10px] leading-[10px]" style={{ visibility: i % 2 === 1 ? 'visible' : 'hidden' }}>
+                  {day}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        {/* Grid */}
-        <div className="flex gap-[2px] overflow-x-auto">
-          {weeks.map((week, weekIndex) => (
-            <div key={weekIndex} className="flex flex-col gap-[2px]">
-              {/* Fill empty days at start of first week */}
-              {weekIndex === 0 && week.length < 7 && (
-                Array(7 - week.length).fill(null).map((_, i) => (
-                  <div key={`empty-${i}`} className="w-[10px] h-[10px]" />
-                ))
-              )}
-              {week.map((day, dayIndex) => {
-                const dateKey = format(day.date, 'yyyy-MM-dd');
-                const colorClass = getColorForValue(day.distance, maxValue);
-                
-                return (
-                  <div
-                    key={dateKey}
-                    className={`w-[10px] h-[10px] rounded-sm ${colorClass} cursor-pointer transition-transform hover:scale-125 hover:ring-1 hover:ring-gray-400`}
-                    onMouseEnter={(e) => {
-                      const rect = e.currentTarget.getBoundingClientRect();
-                      setTooltip({
-                        date: format(day.date, 'MMM d, yyyy'),
-                        value: day.distance / 1000,
-                        count: day.count,
-                        x: rect.left + rect.width / 2,
-                        y: rect.top,
-                      });
-                    }}
-                    onMouseLeave={() => setTooltip(null)}
-                  />
-                );
-              })}
+            {/* Grid */}
+            <div className="flex gap-[2px]">
+              {weeks.map((week, weekIndex) => (
+                <div key={weekIndex} className="flex flex-col gap-[2px]">
+                  {/* Fill empty days at start of first week */}
+                  {weekIndex === 0 && week.length < 7 && (
+                    Array(7 - week.length).fill(null).map((_, i) => (
+                      <div key={`empty-${i}`} className="h-[10px] w-[10px]" />
+                    ))
+                  )}
+                  {week.map((day) => {
+                    const dateKey = format(day.date, 'yyyy-MM-dd');
+                    const colorClass = getColorForValue(day.distance, maxValue);
+                    
+                    return (
+                      <div
+                        key={dateKey}
+                        className={`h-[10px] w-[10px] cursor-pointer rounded-sm ${colorClass} transition-transform hover:scale-125 hover:ring-1 hover:ring-gray-400`}
+                        onMouseEnter={(e) => {
+                          const rect = e.currentTarget.getBoundingClientRect();
+                          setTooltip({
+                            date: format(day.date, 'MMM d, yyyy'),
+                            value: day.distance / 1000,
+                            count: day.count,
+                            x: rect.left + rect.width / 2,
+                            y: rect.top,
+                          });
+                        }}
+                        onMouseLeave={() => setTooltip(null)}
+                      />
+                    );
+                  })}
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
 

@@ -17,7 +17,7 @@ const variantClasses: Record<ButtonVariant, string> = {
   default:
     'bg-primary text-primary-foreground hover:brightness-95 shadow-sm',
   secondary:
-    'bg-secondary text-secondary-foreground hover:brightness-95',
+    'bg-secondary text-secondary-foreground hover:brightness-95 shadow-sm',
   ghost:
     'bg-transparent text-foreground hover:bg-muted',
   outline:
@@ -27,7 +27,7 @@ const variantClasses: Record<ButtonVariant, string> = {
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
-  sm: 'h-8 px-3 text-sm',
+  sm: 'h-9 px-3.5 text-sm',
   md: 'h-10 px-4 text-sm',
   lg: 'h-11 px-5 text-sm font-medium',
   icon: 'h-10 w-10 p-0',
@@ -47,7 +47,7 @@ export function Button({
     <button
       type={type}
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-lg transition-colors duration-150 whitespace-nowrap',
+        'inline-flex items-center justify-center gap-2 rounded-xl transition-all duration-150 whitespace-nowrap',
         'disabled:pointer-events-none disabled:opacity-50',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
         variantClasses[variant],

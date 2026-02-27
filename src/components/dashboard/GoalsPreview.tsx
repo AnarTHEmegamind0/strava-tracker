@@ -33,8 +33,8 @@ export default function GoalsPreview({ goals }: GoalsPreviewProps) {
 
   if (activeGoals.length === 0) {
     return (
-      <Card>
-        <CardHeader className="pb-3">
+      <Card className="border-border/80 shadow-sm">
+        <CardHeader className="pb-2.5">
           <div className="flex items-center justify-between">
             <CardTitle>Зорилго</CardTitle>
           <Link
@@ -56,8 +56,8 @@ export default function GoalsPreview({ goals }: GoalsPreviewProps) {
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="border-border/80 shadow-sm">
+      <CardHeader className="pb-2.5">
         <div className="flex items-center justify-between">
           <CardTitle>Зорилго</CardTitle>
         <Link

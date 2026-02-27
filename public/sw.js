@@ -1,16 +1,15 @@
-const CACHE_NAME = 'strava-tracker-v1';
-const STATIC_CACHE = 'strava-static-v1';
-const DYNAMIC_CACHE = 'strava-dynamic-v1';
+const STATIC_CACHE = 'strava-static-v2';
+const DYNAMIC_CACHE = 'strava-dynamic-v2';
 
 // Static assets to cache immediately
 const STATIC_ASSETS = [
-  '/',
   '/dashboard',
   '/training',
   '/statistics',
   '/coach',
   '/goals',
   '/offline.html',
+  '/strava.gif',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png'
 ];
