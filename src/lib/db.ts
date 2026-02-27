@@ -21,7 +21,10 @@ import {
   TrainingPlanStatus,
 } from '@/types';
 
-const dbPath = path.join(process.cwd(), 'database.sqlite');
+const isVercel = !!process.env.VERCEL;
+// Vercel serverless filesystem is not persistent under the project directory.
+// Use /tmp in production serverless runtime to avoid runtime open errors.
+const dbPath = isVercel ? '/tmp/strava-tracker.sqlite' : path.join(process.cwd(), 'database.sqlite');
 const db = new Database(dbPath);
 
 // Initialize database tables
