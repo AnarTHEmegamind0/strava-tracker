@@ -23,10 +23,74 @@ const weatherTranslations: Record<string, string> = {
   'haze': 'Уусмал',
 };
 
+// Mock weather data for when API key is not available
+function getMockWeatherData(): WeatherData {
+  const now = new Date();
+  const hour = now.getHours();
+  const month = now.getMonth(); // 0-11
+  const isDay = hour >= 8 && hour < 18;
+  
+  // Realistic Mongolian seasonal temperatures
+  // Winter (Nov-Feb): -25 to -10, Spring (Mar-May): -5 to 15, 
+  // Summer (Jun-Aug): 15 to 30, Fall (Sep-Oct): 0 to 15
+  let baseTemp: number;
+  let variation: number;
+  
+  if (month >= 10 || month <= 1) {
+    // Winter: November - February
+    baseTemp = -20;
+    variation = 10; // -20 to -10
+  } else if (month >= 2 && month <= 4) {
+    // Spring: March - May
+    baseTemp = 0;
+    variation = 15;
+  } else if (month >= 5 && month <= 7) {
+    // Summer: June - August
+    baseTemp = 18;
+    variation = 12;
+  } else {
+    // Fall: September - October
+    baseTemp = 5;
+    variation = 10;
+  }
+  
+  const temp = Math.round(baseTemp + Math.random() * variation);
+  const windSpeed = 3 + Math.round(Math.random() * 10);
+  const windChill = temp < 10 ? Math.round(temp - (windSpeed * 0.5)) : temp;
+  
+  // Winter descriptions
+  const winterConditions = [
+    { desc: 'clear sky', desc_mn: 'Цэлмэг тэнгэр', icon: 'd', main: 'Clear' },
+    { desc: 'few clouds', desc_mn: 'Бага зэрэг үүлтэй', icon: '02d', main: 'Clouds' },
+    { desc: 'overcast clouds', desc_mn: 'Бүрхэг', icon: '04d', main: 'Clouds' },
+  ];
+  
+  const condition = winterConditions[Math.floor(Math.random() * winterConditions.length)];
+  
+  return {
+    temp,
+    feels_like: windChill,
+    temp_min: temp - 3,
+    temp_max: temp + 5,
+    humidity: 50 + Math.round(Math.random() * 20),
+    pressure: 1020 + Math.round(Math.random() * 15),
+    wind_speed: windSpeed,
+    wind_deg: Math.round(Math.random() * 360),
+    clouds: Math.round(Math.random() * 40),
+    visibility: 10000,
+    description: condition.desc,
+    description_mn: condition.desc_mn,
+    icon: isDay ? condition.icon.replace('d', 'd') : condition.icon.replace('d', 'n'),
+    main: condition.main,
+    sunrise: Math.floor(Date.now() / 1000) - 3600 * (hour - 8),
+    sunset: Math.floor(Date.now() / 1000) + 3600 * (18 - hour),
+  };
+}
+
 export async function getCurrentWeather(lat: number, lng: number): Promise<WeatherData | null> {
   if (!OPENWEATHERMAP_API_KEY) {
-    console.error('OpenWeatherMap API key not configured');
-    return null;
+    console.warn('OpenWeatherMap API key not configured, using mock data');
+    return getMockWeatherData();
   }
   
   try {

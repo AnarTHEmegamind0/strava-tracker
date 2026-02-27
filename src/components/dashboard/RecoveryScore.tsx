@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface RecoveryData {
   score: number;
@@ -40,16 +41,6 @@ export default function RecoveryScore() {
     }
   };
 
-  const getStatusBg = (status: string) => {
-    switch (status) {
-      case 'excellent': return 'from-green-500 to-emerald-600';
-      case 'good': return 'from-blue-500 to-cyan-600';
-      case 'moderate': return 'from-yellow-500 to-orange-500';
-      case 'low': return 'from-red-500 to-rose-600';
-      default: return 'from-gray-500 to-gray-600';
-    }
-  };
-
   const getStatusText = (status: string) => {
     switch (status) {
       case 'excellent': return 'Маш сайн';
@@ -72,29 +63,33 @@ export default function RecoveryScore() {
 
   if (loading) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
-        <div className="flex items-center gap-3 mb-4">
-          <span className="text-2xl">🔋</span>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Сэргээлт</h3>
-        </div>
-        <div className="flex items-center justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#FC4C02] border-t-transparent"></div>
-        </div>
-      </div>
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-3">
+            <span className="text-xl">🔋</span>
+            Сэргээлт
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-8">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        </CardContent>
+      </Card>
     );
   }
 
   if (!data) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
-        <div className="flex items-center gap-3 mb-4">
-          <span className="text-2xl">🔋</span>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Сэргээлт</h3>
-        </div>
-        <p className="text-gray-500 dark:text-gray-400 text-sm text-center py-4">
-          Тооцоолох боломжгүй
-        </p>
-      </div>
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-3">
+            <span className="text-xl">🔋</span>
+            Сэргээлт
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="py-4 text-center text-sm text-muted-foreground">Тооцоолох боломжгүй</p>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -104,17 +99,17 @@ export default function RecoveryScore() {
   const offset = circumference - progress;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
-      <div className="flex items-center gap-3 mb-4">
-        <span className="text-2xl">🔋</span>
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Сэргээлтийн оноо</h3>
-      </div>
-
-      {/* Circular Progress */}
+    <Card>
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-3">
+          <span className="text-xl">🔋</span>
+          Сэргээлтийн оноо
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-0">
       <div className="flex flex-col items-center">
         <div className="relative w-32 h-32">
           <svg className="w-full h-full transform -rotate-90">
-            {/* Background circle */}
             <circle
               cx="64"
               cy="64"
@@ -122,9 +117,8 @@ export default function RecoveryScore() {
               fill="none"
               stroke="currentColor"
               strokeWidth="10"
-              className="text-gray-200 dark:text-gray-700"
+              className="text-muted"
             />
-            {/* Progress circle */}
             <circle
               cx="64"
               cy="64"
@@ -144,26 +138,24 @@ export default function RecoveryScore() {
               </linearGradient>
             </defs>
           </svg>
-          {/* Score text */}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-3xl font-bold text-gray-900 dark:text-white">{data.score}</span>
-            <span className="text-xs text-gray-500 dark:text-gray-400">/100</span>
+            <span className="text-2xl font-bold text-card-foreground">{data.score}</span>
+            <span className="text-xs text-muted-foreground">/100</span>
           </div>
         </div>
 
-        {/* Status */}
         <div className="mt-4 flex items-center gap-2">
-          <span className="text-2xl">{getStatusEmoji(data.status)}</span>
+          <span className="text-xl">{getStatusEmoji(data.status)}</span>
           <span className={`font-semibold ${getStatusColor(data.status)}`}>
             {getStatusText(data.status)}
           </span>
         </div>
 
-        {/* Recommendation */}
-        <p className="mt-3 text-sm text-gray-600 dark:text-gray-400 text-center">
+        <p className="mt-3 text-center text-sm text-muted-foreground">
           {data.recommendation}
         </p>
       </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

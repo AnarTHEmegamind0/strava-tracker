@@ -163,7 +163,7 @@ export default function AlertsDropdown({ userId = 1 }: AlertsDropdownProps) {
       {/* Bell Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+        className="relative rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         aria-label="Мэдэгдлүүд"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -178,14 +178,14 @@ export default function AlertsDropdown({ userId = 1 }: AlertsDropdownProps) {
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 max-h-[80vh] overflow-hidden flex flex-col">
+        <div className="absolute right-0 z-50 mt-2 flex max-h-[80vh] w-80 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-xl sm:w-96">
           {/* Header */}
-          <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-            <h3 className="font-semibold text-gray-900 dark:text-white">Мэдэгдлүүд</h3>
+          <div className="flex items-center justify-between border-b border-border px-4 py-3">
+            <h3 className="font-semibold text-card-foreground">Мэдэгдлүүд</h3>
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
-                className="text-sm text-[#FC4C02] hover:text-[#e34402] font-medium"
+                className="text-sm font-medium text-primary hover:underline"
               >
                 Бүгдийг уншсан
               </button>
@@ -195,28 +195,28 @@ export default function AlertsDropdown({ userId = 1 }: AlertsDropdownProps) {
           {/* Alerts List */}
           <div className="overflow-y-auto flex-1">
             {loading ? (
-              <div className="p-4 text-center text-gray-500 dark:text-gray-400">
+              <div className="p-4 text-center text-muted-foreground">
                 <svg className="w-6 h-6 animate-spin mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
                 Ачаалж байна...
               </div>
             ) : alerts.length === 0 ? (
-              <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+              <div className="p-8 text-center text-muted-foreground">
                 <svg className="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                 </svg>
                 <p>Мэдэгдэл байхгүй</p>
               </div>
             ) : (
-              <div className="divide-y divide-gray-100 dark:divide-gray-700">
+              <div className="divide-y divide-border">
                 {alerts.map((alert) => {
                   const config = alertConfig[alert.alert_type];
                   return (
                     <div
                       key={alert.id}
-                      className={`p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-l-4 ${priorityColors[alert.priority]} ${
-                        !alert.is_read ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''
+                      className={`border-l-4 p-3 transition-colors hover:bg-muted/60 ${priorityColors[alert.priority]} ${
+                        !alert.is_read ? 'bg-blue-500/5 dark:bg-blue-500/10' : ''
                       }`}
                     >
                       <div className="flex gap-3">
@@ -225,7 +225,7 @@ export default function AlertsDropdown({ userId = 1 }: AlertsDropdownProps) {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between gap-2">
-                            <p className={`text-sm font-medium ${!alert.is_read ? 'text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}>
+                            <p className={`text-sm font-medium ${!alert.is_read ? 'text-card-foreground' : 'text-foreground/90'}`}>
                               {alert.title}
                             </p>
                             <button
@@ -233,7 +233,7 @@ export default function AlertsDropdown({ userId = 1 }: AlertsDropdownProps) {
                                 e.stopPropagation();
                                 deleteAlert(alert.id);
                               }}
-                              className="flex-shrink-0 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded"
+                              className="flex-shrink-0 rounded p-1 text-muted-foreground hover:text-foreground"
                               aria-label="Устгах"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -241,17 +241,17 @@ export default function AlertsDropdown({ userId = 1 }: AlertsDropdownProps) {
                               </svg>
                             </button>
                           </div>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mt-0.5">
+                          <p className="mt-0.5 line-clamp-2 text-sm text-muted-foreground">
                             {alert.message}
                           </p>
                           <div className="flex items-center gap-3 mt-2">
-                            <span className="text-xs text-gray-500 dark:text-gray-500">
+                            <span className="text-xs text-muted-foreground">
                               {formatTimeAgo(alert.created_at)}
                             </span>
                             {!alert.is_read && (
                               <button
                                 onClick={() => markAsRead(alert.id)}
-                                className="text-xs text-[#FC4C02] hover:underline"
+                                className="text-xs text-primary hover:underline"
                               >
                                 Уншсан
                               </button>
@@ -259,7 +259,7 @@ export default function AlertsDropdown({ userId = 1 }: AlertsDropdownProps) {
                             {alert.action_url && (
                               <Link
                                 href={alert.action_url}
-                                className="text-xs text-[#FC4C02] hover:underline"
+                                className="text-xs text-primary hover:underline"
                                 onClick={() => {
                                   markAsRead(alert.id);
                                   setIsOpen(false);
@@ -280,10 +280,10 @@ export default function AlertsDropdown({ userId = 1 }: AlertsDropdownProps) {
 
           {/* Footer */}
           {alerts.length > 0 && (
-            <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700 text-center">
+            <div className="border-t border-border px-4 py-3 text-center">
               <Link
                 href="/settings#notifications"
-                className="text-sm text-gray-600 dark:text-gray-400 hover:text-[#FC4C02]"
+                className="text-sm text-muted-foreground hover:text-primary"
                 onClick={() => setIsOpen(false)}
               >
                 Мэдэгдлийн тохиргоо

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserByStravaId, getActivitiesByUserId, getGoalsByUserId } from '@/lib/db';
-import { generateTrainingPlan } from '@/lib/groq';
+import { generateTrainingPlan, TrainingPlanOptions } from '@/lib/groq';
 import { startOfWeek, startOfMonth, differenceInDays, endOfWeek, endOfMonth } from 'date-fns';
 
 // Calculate goal progress
@@ -63,6 +63,22 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    // Parse request body for custom options
+    let options: TrainingPlanOptions | undefined;
+    try {
+      const body = await request.json();
+      if (body.duration || body.goalType) {
+        options = {
+          duration: body.duration || 7,
+          durationType: body.durationType || 'days',
+          goalType: body.goalType || 'general',
+          targetDate: body.targetDate,
+        };
+      }
+    } catch {
+      // No body or invalid JSON, use defaults
+    }
+
     // Get recent activities
     const activities = getActivitiesByUserId(user.id, 50);
     
@@ -70,8 +86,8 @@ export async function POST(request: NextRequest) {
     const goals = getGoalsByUserId(user.id);
     const goalsWithProgress = goals.map(g => calculateGoalProgress(g, activities));
 
-    // Generate training plan
-    const plan = await generateTrainingPlan(activities, goalsWithProgress);
+    // Generate training plan with options
+    const plan = await generateTrainingPlan(activities, goalsWithProgress, options);
 
     return NextResponse.json({ plan });
   } catch (err) {

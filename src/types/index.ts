@@ -382,6 +382,32 @@ export interface UserSettings extends Omit<DBUserSettings, 'notifications_enable
   weekly_report_enabled: boolean;
 }
 
+// ==================== TRAINING PLANS ====================
+
+export type TrainingPlanStatus = 'active' | 'completed' | 'archived';
+
+export interface DBTrainingPlan {
+  id: number;
+  user_id: number;
+  title: string;
+  description?: string;
+  duration: number;
+  duration_type: 'weeks' | 'days';
+  goal_type: string;
+  content: string;
+  status: TrainingPlanStatus;
+  start_date?: string;
+  end_date?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TrainingPlanWithProgress extends DBTrainingPlan {
+  days_completed: number;
+  total_days: number;
+  progress_percent: number;
+}
+
 // ==================== WEATHER ====================
 
 export interface WeatherData {

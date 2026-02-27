@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface InsightsData {
   insights: string;
@@ -41,27 +42,33 @@ export default function DailyInsights() {
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-br from-[#FC4C02] to-orange-600 rounded-xl p-6 text-white">
-        <div className="flex items-center gap-3 mb-4">
-          <span className="text-2xl">🤖</span>
-          <h3 className="text-lg font-semibold">AI Зөвлөмж</h3>
-        </div>
-        <div className="flex items-center justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-2 border-white border-t-transparent"></div>
-        </div>
-      </div>
+      <Card className="border-primary/20 bg-gradient-to-br from-primary to-accent text-white">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-3 text-white">
+            <span className="text-2xl">🤖</span>
+            AI Зөвлөмж
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-8">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-white border-t-transparent" />
+        </CardContent>
+      </Card>
     );
   }
 
   if (error || !data) {
     return (
-      <div className="bg-gradient-to-br from-gray-600 to-gray-700 rounded-xl p-6 text-white">
-        <div className="flex items-center gap-3 mb-4">
-          <span className="text-2xl">🤖</span>
-          <h3 className="text-lg font-semibold">AI Зөвлөмж</h3>
-        </div>
-        <p className="text-white/80 text-sm">Зөвлөмж ачааллах боломжгүй байна. Дараа дахин оролдоно уу.</p>
-      </div>
+      <Card className="border-border bg-gradient-to-br from-slate-700 to-slate-800 text-white dark:from-slate-800 dark:to-slate-900">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-3 text-white">
+            <span className="text-2xl">🤖</span>
+            AI Зөвлөмж
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-white/80">Зөвлөмж ачааллах боломжгүй байна. Дараа дахин оролдоно уу.</p>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -70,35 +77,34 @@ export default function DailyInsights() {
   const isDecrease = changeNum < 0;
 
   return (
-    <div className="bg-gradient-to-br from-[#FC4C02] to-orange-600 rounded-xl p-6 text-white">
-      <div className="flex items-center justify-between mb-4">
+    <Card className="border-primary/20 bg-gradient-to-br from-primary to-accent text-white">
+      <CardContent className="p-6">
+      <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">🤖</span>
+          <span className="text-xl">🤖</span>
           <h3 className="text-lg font-semibold">AI Өдрийн зөвлөмж</h3>
         </div>
-        <div className="text-xs bg-white/20 px-2 py-1 rounded-full">
+        <div className="rounded-full bg-white/20 px-2 py-1 text-xs">
           {new Date().toLocaleDateString('mn-MN', { weekday: 'short', month: 'short', day: 'numeric' })}
         </div>
       </div>
 
-      {/* AI Insights */}
-      <div className="bg-white/10 rounded-lg p-4 mb-4">
+      <div className="mb-4 rounded-lg bg-white/10 p-4">
         <p className="text-sm leading-relaxed whitespace-pre-line">{data.insights}</p>
       </div>
 
-      {/* Quick Stats */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="bg-white/10 rounded-lg p-3 text-center">
-          <p className="text-2xl font-bold">{data.stats.lastWeekDistance.toFixed(1)}</p>
+        <div className="rounded-lg bg-white/10 p-3 text-center">
+          <p className="text-xl font-bold">{data.stats.lastWeekDistance.toFixed(1)}</p>
           <p className="text-xs text-white/70">км (7 хоног)</p>
         </div>
-        <div className="bg-white/10 rounded-lg p-3 text-center">
-          <p className="text-2xl font-bold">{data.stats.lastWeekCount}</p>
+        <div className="rounded-lg bg-white/10 p-3 text-center">
+          <p className="text-xl font-bold">{data.stats.lastWeekCount}</p>
           <p className="text-xs text-white/70">дасгал</p>
         </div>
-        <div className="bg-white/10 rounded-lg p-3 text-center">
+        <div className="rounded-lg bg-white/10 p-3 text-center">
           <div className="flex items-center justify-center gap-1">
-            <p className="text-2xl font-bold">{Math.abs(changeNum)}%</p>
+            <p className="text-xl font-bold">{Math.abs(changeNum)}%</p>
             {isIncrease && <span className="text-green-300">↑</span>}
             {isDecrease && <span className="text-red-300">↓</span>}
           </div>
@@ -106,7 +112,6 @@ export default function DailyInsights() {
         </div>
       </div>
 
-      {/* Days since last activity warning */}
       {data.stats.daysSinceLastActivity !== null && data.stats.daysSinceLastActivity >= 3 && (
         <div className="mt-4 bg-yellow-500/20 border border-yellow-300/30 rounded-lg p-3 flex items-center gap-2">
           <span>⚠️</span>
@@ -115,6 +120,7 @@ export default function DailyInsights() {
           </p>
         </div>
       )}
-    </div>
+      </CardContent>
+    </Card>
   );
 }

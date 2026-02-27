@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { WeatherWithRecommendation } from '@/types';
 import { getWeatherIconUrl } from '@/lib/weather';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface WeatherWidgetProps {
   compact?: boolean;
@@ -37,35 +38,40 @@ export default function WeatherWidget({ compact = false }: WeatherWidgetProps) {
 
   if (loading) {
     return (
-      <div className={`bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm ${compact ? '' : 'p-6'}`}>
+      <Card>
+        <CardContent className={`${compact ? 'p-4' : 'p-6'}`}>
         <div className="flex items-center gap-3">
-          <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-full w-12 h-12" />
+          <div className="h-12 w-12 animate-pulse rounded-full bg-muted" />
           <div className="space-y-2 flex-1">
-            <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-4 w-24 rounded" />
-            <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-3 w-32 rounded" />
+            <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+            <div className="h-3 w-32 animate-pulse rounded bg-muted" />
           </div>
         </div>
-      </div>
+        </CardContent>
+      </Card>
     );
   }
 
   if (error || !weather) {
     return (
-      <div className={`bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm ${compact ? '' : 'p-6'}`}>
-        <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400">
+      <Card>
+        <CardContent className={`${compact ? 'p-4' : 'p-6'}`}>
+        <div className="flex items-center gap-3 text-muted-foreground">
           <span className="text-2xl">🌡️</span>
           <div>
             <p className="font-medium">Цаг агаар</p>
             <p className="text-sm">{error || 'Мэдээлэл байхгүй'}</p>
           </div>
         </div>
-      </div>
+        </CardContent>
+      </Card>
     );
   }
 
   if (compact) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+      <Card>
+        <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img 
@@ -74,10 +80,10 @@ export default function WeatherWidget({ compact = false }: WeatherWidgetProps) {
               className="w-12 h-12"
             />
             <div>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-xl font-bold text-card-foreground">
                 {weather.temp}°C
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-muted-foreground">
                 {weather.location}
               </p>
             </div>
@@ -85,28 +91,31 @@ export default function WeatherWidget({ compact = false }: WeatherWidgetProps) {
           
           <div className={`px-3 py-1 rounded-full text-sm font-medium ${
             weather.recommendation.canWorkoutOutdoor
-              ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-              : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
+              ? 'bg-success/10 text-success'
+              : 'bg-danger/10 text-danger'
           }`}>
             {weather.recommendation.canWorkoutOutdoor ? '✓ Гадаа OK' : '✕ Дотор'}
           </div>
         </div>
-      </div>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+    <Card>
+      <CardHeader className="pb-3">
+      <div className="flex items-center justify-between">
+        <CardTitle className="flex items-center gap-2">
           <span>🌤️</span> Цаг агаар
-        </h3>
-        <span className="text-sm text-gray-500 dark:text-gray-400">
+        </CardTitle>
+        <span className="text-sm text-muted-foreground">
           {weather.location}
         </span>
       </div>
+      </CardHeader>
+      <CardContent className="pt-0">
 
-      {/* Main weather info */}
       <div className="flex items-center gap-4 mb-4">
         <img 
           src={getWeatherIconUrl(weather.icon, '4x')} 
@@ -114,39 +123,37 @@ export default function WeatherWidget({ compact = false }: WeatherWidgetProps) {
           className="w-20 h-20"
         />
         <div>
-          <p className="text-4xl font-bold text-gray-900 dark:text-white">
+          <p className="text-3xl font-bold text-card-foreground">
             {weather.temp}°C
           </p>
-          <p className="text-gray-500 dark:text-gray-400 capitalize">
+          <p className="text-muted-foreground capitalize">
             {weather.description_mn}
           </p>
-          <p className="text-sm text-gray-400 dark:text-gray-500">
+          <p className="text-sm text-muted-foreground">
             Мэдрэгдэх: {weather.feels_like}°C
           </p>
         </div>
       </div>
 
-      {/* Weather details */}
       <div className="grid grid-cols-3 gap-4 mb-4 text-center">
-        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-2">
-          <p className="text-xs text-gray-500 dark:text-gray-400">Салхи</p>
-          <p className="font-semibold text-gray-900 dark:text-white">{weather.wind_speed} км/ц</p>
+        <div className="rounded-lg bg-muted/70 p-2">
+          <p className="text-xs text-muted-foreground">Салхи</p>
+          <p className="font-semibold text-card-foreground">{weather.wind_speed} км/ц</p>
         </div>
-        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-2">
-          <p className="text-xs text-gray-500 dark:text-gray-400">Чийгшил</p>
-          <p className="font-semibold text-gray-900 dark:text-white">{weather.humidity}%</p>
+        <div className="rounded-lg bg-muted/70 p-2">
+          <p className="text-xs text-muted-foreground">Чийгшил</p>
+          <p className="font-semibold text-card-foreground">{weather.humidity}%</p>
         </div>
-        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-2">
-          <p className="text-xs text-gray-500 dark:text-gray-400">Үүлшил</p>
-          <p className="font-semibold text-gray-900 dark:text-white">{weather.clouds}%</p>
+        <div className="rounded-lg bg-muted/70 p-2">
+          <p className="text-xs text-muted-foreground">Үүлшил</p>
+          <p className="font-semibold text-card-foreground">{weather.clouds}%</p>
         </div>
       </div>
 
-      {/* Workout recommendation */}
       <div className={`rounded-lg p-4 ${
         weather.recommendation.canWorkoutOutdoor
-          ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800'
-          : 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800'
+          ? 'border border-success/20 bg-success/10'
+          : 'border border-danger/20 bg-danger/10'
       }`}>
         <div className="flex items-center gap-2 mb-2">
           <span className="text-lg">
@@ -154,8 +161,8 @@ export default function WeatherWidget({ compact = false }: WeatherWidgetProps) {
           </span>
           <span className={`font-semibold ${
             weather.recommendation.canWorkoutOutdoor
-              ? 'text-green-700 dark:text-green-400'
-              : 'text-red-700 dark:text-red-400'
+              ? 'text-success'
+              : 'text-danger'
           }`}>
             {weather.recommendation.canWorkoutOutdoor 
               ? 'Гадаа дасгал хийхэд тохиромжтой' 
@@ -163,16 +170,15 @@ export default function WeatherWidget({ compact = false }: WeatherWidgetProps) {
             }
           </span>
         </div>
-        <p className="text-sm text-gray-700 dark:text-gray-300">
+        <p className="text-sm text-foreground">
           {weather.recommendation.recommendation}
         </p>
       </div>
 
-      {/* Warnings */}
       {weather.recommendation.warnings.length > 0 && (
         <div className="mt-4 space-y-2">
           {weather.recommendation.warnings.map((warning, i) => (
-            <div key={i} className="flex items-center gap-2 text-sm text-yellow-700 dark:text-yellow-400">
+            <div key={i} className="flex items-center gap-2 text-sm text-warning">
               <span>⚠️</span>
               <span>{warning}</span>
             </div>
@@ -180,15 +186,14 @@ export default function WeatherWidget({ compact = false }: WeatherWidgetProps) {
         </div>
       )}
 
-      {/* Clothing suggestions */}
       {weather.recommendation.clothing.length > 0 && (
         <div className="mt-4">
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Хувцасны зөвлөмж:</p>
+          <p className="mb-2 text-sm text-muted-foreground">Хувцасны зөвлөмж:</p>
           <div className="flex flex-wrap gap-2">
             {weather.recommendation.clothing.map((item, i) => (
               <span 
                 key={i}
-                className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-sm text-gray-700 dark:text-gray-300"
+                className="rounded border border-border bg-muted px-2 py-1 text-sm text-foreground"
               >
                 {item}
               </span>
@@ -197,14 +202,14 @@ export default function WeatherWidget({ compact = false }: WeatherWidgetProps) {
         </div>
       )}
 
-      {/* Best time to workout */}
       {weather.recommendation.bestTimeToWorkout && (
-        <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-          <p className="text-sm text-blue-700 dark:text-blue-400">
+        <div className="mt-4 rounded-lg bg-blue-500/10 p-3">
+          <p className="text-sm text-blue-700 dark:text-blue-300">
             ⏰ Хамгийн тохиромжтой цаг: {weather.recommendation.bestTimeToWorkout}
           </p>
         </div>
       )}
-    </div>
+      </CardContent>
+    </Card>
   );
 }

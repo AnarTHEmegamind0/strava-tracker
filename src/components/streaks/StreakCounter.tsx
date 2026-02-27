@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface StreakData {
   daily: {
@@ -24,6 +26,7 @@ interface StreakCounterProps {
 export default function StreakCounter({ userId = 1, compact = false }: StreakCounterProps) {
   const [streakData, setStreakData] = useState<StreakData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     async function fetchStreaks() {
@@ -32,9 +35,21 @@ export default function StreakCounter({ userId = 1, compact = false }: StreakCou
         if (res.ok) {
           const data = await res.json();
           setStreakData(data.streaks);
+        } else {
+          // Use default data when not authenticated
+          setStreakData({
+            daily: { current: 0, best: 0, lastActivityDate: null, isAtRisk: false },
+            weekly: { current: 0, best: 0, lastActivityDate: null },
+          });
+          setError(true);
         }
-      } catch (error) {
-        console.error('Error fetching streaks:', error);
+      } catch (err) {
+        console.error('Error fetching streaks:', err);
+        setError(true);
+        setStreakData({
+          daily: { current: 0, best: 0, lastActivityDate: null, isAtRisk: false },
+          weekly: { current: 0, best: 0, lastActivityDate: null },
+        });
       } finally {
         setLoading(false);
       }
@@ -44,7 +59,17 @@ export default function StreakCounter({ userId = 1, compact = false }: StreakCou
 
   if (loading) {
     return (
-      <div className={`animate-pulse ${compact ? 'h-10' : 'h-32'} bg-gray-100 dark:bg-gray-700 rounded-lg`} />
+      <Card>
+        <CardContent className={compact ? 'p-3' : 'p-6'}>
+        <div className="flex items-center gap-3">
+          <div className="h-12 w-12 animate-pulse rounded-full bg-muted" />
+          <div className="space-y-2 flex-1">
+            <div className="h-4 w-20 animate-pulse rounded bg-muted" />
+            <div className="h-3 w-16 animate-pulse rounded bg-muted" />
+          </div>
+        </div>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -57,16 +82,16 @@ export default function StreakCounter({ userId = 1, compact = false }: StreakCou
   // Compact mode for header/sidebar
   if (compact) {
     return (
-      <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg">
+      <div className="flex items-center gap-2 rounded-lg border border-primary/15 bg-gradient-to-r from-primary/10 to-orange-500/10 px-3 py-2">
         <div className="relative">
-          <span className="text-2xl">🔥</span>
+          <span className="text-xl">🔥</span>
           {daily.isAtRisk && (
-            <span className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-pulse" />
+            <span className="absolute -right-1 -top-1 h-3 w-3 animate-pulse rounded-full bg-warning" />
           )}
         </div>
         <div>
-          <span className="font-bold text-lg text-gray-900 dark:text-white">{daily.current}</span>
-          <span className="text-sm text-gray-600 dark:text-gray-400 ml-1">хоног</span>
+          <span className="text-lg font-bold text-foreground">{daily.current}</span>
+          <span className="ml-1 text-sm text-muted-foreground">хоног</span>
         </div>
       </div>
     );
@@ -74,77 +99,84 @@ export default function StreakCounter({ userId = 1, compact = false }: StreakCou
 
   // Full mode for dashboard
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          Streak
-        </h3>
+    <Card>
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+        <CardTitle className="flex items-center gap-2">
+          <span>🔥</span> Streak
+        </CardTitle>
         {daily.isAtRisk && (
-          <span className="px-2 py-1 text-xs font-medium text-yellow-700 dark:text-yellow-300 bg-yellow-100 dark:bg-yellow-900/30 rounded-full animate-pulse">
+          <Badge variant="warning" className="animate-pulse">
             Эрсдэлд!
-          </span>
+          </Badge>
         )}
-      </div>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0">
 
       <div className="grid grid-cols-2 gap-4">
-        {/* Daily Streak */}
-        <div className="text-center p-4 bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-xl">
+        <div className="rounded-xl border border-primary/15 bg-gradient-to-br from-primary/10 to-orange-500/10 p-4 text-center">
           <div className="relative inline-block">
-            <span className="text-4xl">🔥</span>
+          <span className="text-2xl">🔥</span>
             {daily.isAtRisk && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full animate-pulse flex items-center justify-center">
+              <span className="absolute -right-1 -top-1 flex h-4 w-4 animate-pulse items-center justify-center rounded-full bg-warning">
                 <span className="text-[10px]">!</span>
               </span>
             )}
           </div>
           <div className="mt-2">
-            <div className="text-3xl font-bold text-gray-900 dark:text-white">
+            <div className="text-xl font-bold text-card-foreground">
               {daily.current}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">
+            <div className="text-xs text-muted-foreground">
               Өдрийн streak
             </div>
           </div>
-          <div className="mt-2 text-xs text-gray-500 dark:text-gray-500">
-            Хамгийн сайн: {daily.best} хоног
+          <div className="mt-1 text-xs text-muted-foreground">
+            Шилдэг: {daily.best}
           </div>
         </div>
 
-        {/* Weekly Streak */}
-        <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl">
-          <span className="text-4xl">📅</span>
+        <div className="rounded-xl border border-blue-500/15 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 p-4 text-center">
+          <span className="text-2xl">📅</span>
           <div className="mt-2">
-            <div className="text-3xl font-bold text-gray-900 dark:text-white">
+            <div className="text-xl font-bold text-card-foreground">
               {weekly.current}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">
-              Долоо хоногийн streak
+            <div className="text-xs text-muted-foreground">
+              7 хоногийн streak
             </div>
           </div>
-          <div className="mt-2 text-xs text-gray-500 dark:text-gray-500">
-            Хамгийн сайн: {weekly.best} долоо хоног
+          <div className="mt-1 text-xs text-muted-foreground">
+            Шилдэг: {weekly.best}
           </div>
         </div>
       </div>
 
-      {/* Motivational message */}
       {daily.isAtRisk && daily.current > 0 && (
-        <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-          <p className="text-sm text-yellow-800 dark:text-yellow-200">
-            <span className="font-semibold">Анхааруулга:</span> Өнөөдөр дасгал хийгээгүй байна. 
-            Streak-ээ хадгалахын тулд дор хаяж нэг дасгал хийгээрэй!
+        <div className="mt-4 rounded-lg border border-warning/20 bg-warning/10 p-3">
+          <p className="text-sm text-warning">
+            ⚠️ Өнөөдөр дасгал хийгээгүй байна. Streak-ээ хадгалаарай!
           </p>
         </div>
       )}
 
       {daily.current >= 7 && !daily.isAtRisk && (
-        <div className="mt-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-          <p className="text-sm text-green-800 dark:text-green-200">
-            <span className="font-semibold">Гайхалтай!</span> {daily.current} хоногийн streak 
-            үргэлжилж байна. Танд хүч байна! 💪
+        <div className="mt-4 rounded-lg border border-success/20 bg-success/10 p-3">
+          <p className="text-sm text-success">
+            💪 {daily.current} хоногийн streak! Гайхалтай!
           </p>
         </div>
       )}
-    </div>
+
+      {error && daily.current === 0 && (
+        <div className="mt-4 rounded-lg bg-muted p-3">
+          <p className="text-center text-sm text-muted-foreground">
+            Strava-д нэвтэрч дасгал татаарай
+          </p>
+        </div>
+      )}
+      </CardContent>
+    </Card>
   );
 }

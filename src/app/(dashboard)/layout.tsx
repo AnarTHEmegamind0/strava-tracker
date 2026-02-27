@@ -1,30 +1,36 @@
 'use client';
 
 import { useApp } from '@/lib/context';
-import Sidebar from '@/components/layout/Sidebar';
 import { AppProvider } from '@/lib/context';
+import AppShell from '@/components/layout/AppShell';
+import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
   const { athlete, loading } = useApp();
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#FC4C02] border-t-transparent" />
-          <p className="text-gray-500 dark:text-gray-400">Ачааллаж байна...</p>
+      <div className="min-h-screen bg-background px-4 py-6 md:px-6">
+        <div className="mx-auto flex max-w-7xl items-center justify-center pt-16 md:pt-24">
+          <Card className="w-full max-w-lg">
+            <CardContent className="flex items-center gap-4 p-6">
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-3 w-56" />
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 flex">
-      <Sidebar athleteName={athlete ? `${athlete.firstname} ${athlete.lastname}` : undefined} />
-      <main className="flex-1 overflow-auto pt-14 md:pt-0">
-        {children}
-      </main>
-    </div>
+    <AppShell athleteName={athlete ? `${athlete.firstname} ${athlete.lastname}` : undefined}>
+      {children}
+    </AppShell>
   );
 }
 

@@ -2,6 +2,7 @@
 
 import { DBActivity } from '@/types';
 import Link from 'next/link';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface RecentActivitiesProps {
   activities: DBActivity[];
@@ -62,62 +63,64 @@ export default function RecentActivities({ activities }: RecentActivitiesProps) 
 
   if (recentActivities.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          Сүүлийн дасгалууд
-        </h3>
-        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-          <p>Дасгал байхгүй байна.</p>
-          <p className="text-sm mt-2">Strava-с синк хийж дасгалуудаа татна уу.</p>
-        </div>
-      </div>
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle>Сүүлийн дасгалууд</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <div className="py-8 text-center text-muted-foreground">
+            <p>Дасгал байхгүй байна.</p>
+            <p className="mt-2 text-sm">Strava-с синк хийж дасгалуудаа татна уу.</p>
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          Сүүлийн дасгалууд
-        </h3>
+    <Card>
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between gap-3">
+          <CardTitle>Сүүлийн дасгалууд</CardTitle>
         <Link
           href="/training"
-          className="text-sm text-[#FC4C02] hover:text-[#e34402] font-medium"
+          className="text-sm font-medium text-primary hover:underline"
         >
           Бүгдийг харах
         </Link>
-      </div>
-      
-      <div className="space-y-3">
+        </div>
+      </CardHeader>
+
+      <CardContent className="space-y-2">
         {recentActivities.map((activity) => (
           <Link
             key={activity.strava_id}
             href={`/activity/${activity.strava_id}`}
-            className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
+            className="flex cursor-pointer items-center gap-4 rounded-lg border border-transparent p-3 transition-colors hover:border-border hover:bg-muted/60"
           >
             <span className="text-2xl">{getActivityIcon(activity.type)}</span>
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-gray-900 dark:text-white truncate">
+              <p className="truncate font-medium text-card-foreground">
                 {activity.name}
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-muted-foreground">
                 {formatDate(activity.start_date)} • {getActivityTypeName(activity.type)}
               </p>
             </div>
             <div className="text-right">
-              <p className="font-semibold text-gray-900 dark:text-white">
+              <p className="font-semibold text-card-foreground">
                 {formatDistance(activity.distance)}
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-muted-foreground">
                 {formatDuration(activity.moving_time)}
               </p>
             </div>
-            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            <svg className="h-5 w-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 5l7 7-7 7" />
             </svg>
           </Link>
         ))}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

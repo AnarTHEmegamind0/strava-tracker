@@ -10,12 +10,15 @@ import {
   DBUserStreak,
   DBSmartAlert,
   DBUserSettings,
+  DBTrainingPlan,
+  TrainingPlanWithProgress,
   AchievementWithStatus,
   SmartAlert,
   UserSettings,
   StreakType,
   AlertType,
   AlertPriority,
+  TrainingPlanStatus,
 } from '@/types';
 
 const dbPath = path.join(process.cwd(), 'database.sqlite');
@@ -159,6 +162,26 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_user_achievements_user ON user_achievements(user_id);
   CREATE INDEX IF NOT EXISTS idx_smart_alerts_user ON smart_alerts(user_id, is_read);
   CREATE INDEX IF NOT EXISTS idx_user_streaks_user ON user_streaks(user_id);
+
+  -- Training plans
+  CREATE TABLE IF NOT EXISTS training_plans (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    duration INTEGER NOT NULL,
+    duration_type TEXT NOT NULL DEFAULT 'days',
+    goal_type TEXT NOT NULL DEFAULT 'general',
+    content TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'active',
+    start_date DATE,
+    end_date DATE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_training_plans_user ON training_plans(user_id, status);
 `);
 
 // User operations
@@ -525,6 +548,97 @@ export function upsertUserSettings(settings: Partial<DBUserSettings> & { user_id
     weekly_report_enabled: merged.weekly_report_enabled ? 1 : 0,
   });
   return getUserSettings(settings.user_id) as UserSettings;
+}
+
+// ==================== TRAINING PLANS ====================
+
+export function createTrainingPlan(plan: Omit<DBTrainingPlan, 'id' | 'created_at' | 'updated_at'>): DBTrainingPlan {
+  const stmt = db.prepare(`
+    INSERT INTO training_plans (user_id, title, description, duration, duration_type, goal_type, content, status, start_date, end_date)
+    VALUES (@user_id, @title, @description, @duration, @duration_type, @goal_type, @content, @status, @start_date, @end_date)
+    RETURNING *
+  `);
+  return stmt.get(plan) as DBTrainingPlan;
+}
+
+export function getTrainingPlansByUserId(userId: number, status?: TrainingPlanStatus): DBTrainingPlan[] {
+  if (status) {
+    const stmt = db.prepare('SELECT * FROM training_plans WHERE user_id = ? AND status = ? ORDER BY created_at DESC');
+    return stmt.all(userId, status) as DBTrainingPlan[];
+  }
+  const stmt = db.prepare('SELECT * FROM training_plans WHERE user_id = ? ORDER BY created_at DESC');
+  return stmt.all(userId) as DBTrainingPlan[];
+}
+
+export function getTrainingPlanById(id: number): DBTrainingPlan | undefined {
+  const stmt = db.prepare('SELECT * FROM training_plans WHERE id = ?');
+  return stmt.get(id) as DBTrainingPlan | undefined;
+}
+
+export function updateTrainingPlan(id: number, updates: Partial<Omit<DBTrainingPlan, 'id' | 'user_id' | 'created_at'>>): DBTrainingPlan | undefined {
+  const plan = getTrainingPlanById(id);
+  if (!plan) return undefined;
+
+  const updatedPlan = { ...plan, ...updates, updated_at: new Date().toISOString() };
+  const stmt = db.prepare(`
+    UPDATE training_plans 
+    SET title = @title, description = @description, duration = @duration, duration_type = @duration_type, 
+        goal_type = @goal_type, content = @content, status = @status, start_date = @start_date, 
+        end_date = @end_date, updated_at = CURRENT_TIMESTAMP
+    WHERE id = @id
+    RETURNING *
+  `);
+  return stmt.get(updatedPlan) as DBTrainingPlan;
+}
+
+export function updateTrainingPlanStatus(id: number, status: TrainingPlanStatus): boolean {
+  const stmt = db.prepare('UPDATE training_plans SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?');
+  const result = stmt.run(status, id);
+  return result.changes > 0;
+}
+
+export function startTrainingPlan(id: number): DBTrainingPlan | undefined {
+  const plan = getTrainingPlanById(id);
+  if (!plan) return undefined;
+
+  const startDate = new Date().toISOString().split('T')[0];
+  const totalDays = plan.duration_type === 'weeks' ? plan.duration * 7 : plan.duration;
+  const endDate = new Date(Date.now() + totalDays * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+  const stmt = db.prepare(`
+    UPDATE training_plans 
+    SET status = 'active', start_date = ?, end_date = ?, updated_at = CURRENT_TIMESTAMP
+    WHERE id = ?
+    RETURNING *
+  `);
+  return stmt.get(startDate, endDate, id) as DBTrainingPlan;
+}
+
+export function deleteTrainingPlan(id: number): boolean {
+  const stmt = db.prepare('DELETE FROM training_plans WHERE id = ?');
+  const result = stmt.run(id);
+  return result.changes > 0;
+}
+
+export function getTrainingPlanWithProgress(id: number): TrainingPlanWithProgress | undefined {
+  const plan = getTrainingPlanById(id);
+  if (!plan) return undefined;
+
+  const totalDays = plan.duration_type === 'weeks' ? plan.duration * 7 : plan.duration;
+  let daysCompleted = 0;
+
+  if (plan.start_date) {
+    const startDate = new Date(plan.start_date);
+    const now = new Date();
+    daysCompleted = Math.min(totalDays, Math.floor((now.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000)));
+  }
+
+  return {
+    ...plan,
+    days_completed: Math.max(0, daysCompleted),
+    total_days: totalDays,
+    progress_percent: totalDays > 0 ? Math.min(100, (daysCompleted / totalDays) * 100) : 0,
+  };
 }
 
 export default db;
