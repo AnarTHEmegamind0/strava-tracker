@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
-  const { athlete, loading } = useApp();
+  const { loading } = useApp();
 
   if (loading) {
     return (
@@ -28,7 +28,7 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AppShell athleteName={athlete ? `${athlete.firstname} ${athlete.lastname}` : undefined}>
+    <AppShell>
       {children}
     </AppShell>
   );

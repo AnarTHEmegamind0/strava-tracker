@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -98,10 +98,6 @@ function Icon({ name, className = '' }: { name: string; className?: string }): R
   return icons[name] ?? null;
 }
 
-interface SidebarProps {
-  athleteName?: string;
-}
-
 function NavLink({
   href,
   label,
@@ -138,31 +134,12 @@ function NavLink({
   );
 }
 
-export default function Sidebar({ athleteName }: SidebarProps) {
+export default function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setMobileOpen(false);
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  useEffect(() => {
-    document.body.style.overflow = mobileOpen ? 'hidden' : '';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [mobileOpen]);
-
-  const renderContent = (isMobile = false) => {
-    const isCollapsed = !isMobile && collapsed;
+  const renderContent = () => {
+    const isCollapsed = collapsed;
 
     return (
       <>
@@ -191,34 +168,32 @@ export default function Sidebar({ athleteName }: SidebarProps) {
           {navItems.map((item) => {
             const active = pathname === item.href || pathname?.startsWith(`${item.href}/`);
             return (
-              <NavLink
-                key={item.href}
-                href={item.href}
-                label={item.label}
-                icon={item.icon}
-                active={!!active}
-                collapsed={isCollapsed}
-                onClick={isMobile ? () => setMobileOpen(false) : undefined}
-              />
-            );
-          })}
+                <NavLink
+                  key={item.href}
+                  href={item.href}
+                  label={item.label}
+                  icon={item.icon}
+                  active={!!active}
+                  collapsed={isCollapsed}
+                />
+              );
+            })}
         </nav>
 
         <div className="space-y-1 border-t border-border p-2">
           {bottomNavItems.map((item) => {
             const active = pathname === item.href || pathname?.startsWith(`${item.href}/`);
             return (
-              <NavLink
-                key={item.href}
-                href={item.href}
-                label={item.label}
-                icon={item.icon}
-                active={!!active}
-                collapsed={isCollapsed}
-                onClick={isMobile ? () => setMobileOpen(false) : undefined}
-              />
-            );
-          })}
+                <NavLink
+                  key={item.href}
+                  href={item.href}
+                  label={item.label}
+                  icon={item.icon}
+                  active={!!active}
+                  collapsed={isCollapsed}
+                />
+              );
+            })}
 
           <Button
             variant="ghost"
@@ -240,53 +215,13 @@ export default function Sidebar({ athleteName }: SidebarProps) {
 
   return (
     <>
-      <div className="fixed inset-x-0 top-0 z-40 flex h-14 items-center justify-between border-b border-border bg-card/95 px-4 backdrop-blur md:hidden">
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <div className="grid h-8 w-8 place-items-center rounded-md bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7.03 13.828h4.169" />
-            </svg>
-          </div>
-          <div>
-            <p className="text-sm font-semibold">Strava Buster</p>
-            <p className="text-[11px] text-muted-foreground">Дасгалын тэмдэглэл</p>
-          </div>
-        </Link>
-
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label={mobileOpen ? 'Close navigation' : 'Open navigation'}
-          onClick={() => setMobileOpen((prev) => !prev)}
-        >
-          <Icon name={mobileOpen ? 'close' : 'menu'} className="h-5 w-5" />
-        </Button>
-      </div>
-
-      {mobileOpen && (
-        <button
-          aria-label="Close navigation overlay"
-          className="fixed inset-0 z-40 bg-black/45 md:hidden"
-          onClick={() => setMobileOpen(false)}
-        />
-      )}
-
-      <aside
-        className={cn(
-          'fixed inset-y-14 left-0 z-50 flex w-72 flex-col border-r border-border bg-card shadow-xl transition-transform duration-200 md:hidden',
-          mobileOpen ? 'translate-x-0' : '-translate-x-full',
-        )}
-      >
-        {renderContent(true)}
-      </aside>
-
       <aside
         className={cn(
           'hidden md:sticky md:top-0 md:flex md:h-screen md:flex-col md:border-r md:border-border md:bg-card',
           collapsed ? 'md:w-20' : 'md:w-72',
         )}
       >
-        {renderContent(false)}
+        {renderContent()}
       </aside>
     </>
   );

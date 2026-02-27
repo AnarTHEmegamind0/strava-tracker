@@ -34,8 +34,37 @@ const navItems = [
     ),
   },
   {
+    href: '/achievements',
+    label: 'Амжилт',
+    icon: (
+      <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8 4h8v3a4 4 0 01-4 4 4 4 0 01-4-4V4zm0 0H5a2 2 0 00-2 2v1a4 4 0 004 4h1m8-7h3a2 2 0 012 2v1a4 4 0 01-4 4h-1M9 14h6m-5 0v3a2 2 0 002 2 2 2 0 002-2v-3" />
+      </svg>
+    ),
+    iconFilled: (
+      <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M8 4h8v3a4 4 0 01-8 0V4zm-3 0h2v3a5.97 5.97 0 01-.28 1.82A4 4 0 013 7V6a2 2 0 012-2zm14 0h-2v3a5.97 5.97 0 00.28 1.82A4 4 0 0021 7V6a2 2 0 00-2-2zM9 14h6v3a3 3 0 11-6 0v-3z" />
+      </svg>
+    ),
+  },
+  {
+    href: '/predictions',
+    label: 'Таамаг',
+    icon: (
+      <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l5-5 4 4 7-8" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16 7h4v4" />
+      </svg>
+    ),
+    iconFilled: (
+      <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M3.293 16.293a1 1 0 011.414 0L9 20.586l4.293-4.293a1 1 0 011.414 0L22 23.586V17a1 1 0 112 0v8a1 1 0 01-1 1h-8a1 1 0 110-2h6.586L14 17.414l-4.293 4.293a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414z" />
+      </svg>
+    ),
+  },
+  {
     href: '/coach',
-    label: 'AI',
+    label: 'AI Coach',
     icon: (
       <svg className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
@@ -46,7 +75,6 @@ const navItems = [
         <path fillRule="evenodd" d="M9 4.5a.75.75 0 01.721.544l.813 2.846a3.75 3.75 0 002.576 2.576l2.846.813a.75.75 0 010 1.442l-2.846.813a3.75 3.75 0 00-2.576 2.576l-.813 2.846a.75.75 0 01-1.442 0l-.813-2.846a3.75 3.75 0 00-2.576-2.576l-2.846-.813a.75.75 0 010-1.442l2.846-.813A3.75 3.75 0 007.466 7.89l.813-2.846A.75.75 0 019 4.5zM18 1.5a.75.75 0 01.728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 010 1.456l-1.036.258c-.94.236-1.674.97-1.91 1.91l-.258 1.036a.75.75 0 01-1.456 0l-.258-1.036a2.625 2.625 0 00-1.91-1.91l-1.036-.258a.75.75 0 010-1.456l1.036-.258a2.625 2.625 0 001.91-1.91l.258-1.036A.75.75 0 0118 1.5z" clipRule="evenodd" />
       </svg>
     ),
-    isSpecial: true,
   },
   {
     href: '/statistics',
@@ -92,6 +120,20 @@ const navItems = [
       </svg>
     ),
   },
+  {
+    href: '/settings',
+    label: 'Профайл',
+    icon: (
+      <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6.75a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.1a7.5 7.5 0 0115 0" />
+      </svg>
+    ),
+    iconFilled: (
+      <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+        <path fillRule="evenodd" d="M12 2a4.75 4.75 0 100 9.5A4.75 4.75 0 0012 2zM3.5 21a8.5 8.5 0 0117 0 .5.5 0 01-.5.5h-16a.5.5 0 01-.5-.5z" clipRule="evenodd" />
+      </svg>
+    ),
+  },
 ];
 
 export default function BottomNav() {
@@ -99,48 +141,23 @@ export default function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden safe-bottom">
-      <div className="mx-2 mb-2 rounded-2xl border border-border/50 bg-card/95 shadow-lg backdrop-blur-xl">
-        <div className="flex items-center justify-between px-1 py-1">
+      <div className="mx-2 mb-0.5 rounded-2xl border border-border/50 bg-card/95 shadow-lg backdrop-blur-xl">
+        <div className="no-scrollbar flex items-center gap-1 overflow-x-auto px-1 py-1.5">
           {navItems.map((item) => {
             const isActive = pathname === item.href || pathname?.startsWith(`${item.href}/`);
-            
-            if (item.isSpecial) {
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="relative -mt-5 flex flex-col items-center"
-                >
-                  <div className={cn(
-                    'flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all duration-200',
-                    isActive
-                      ? 'bg-gradient-to-br from-primary to-accent text-white scale-105'
-                      : 'bg-gradient-to-br from-primary/90 to-accent/90 text-white hover:scale-105'
-                  )}>
-                    {isActive ? item.iconFilled : item.icon}
-                  </div>
-                  <span className={cn(
-                    'mt-1 text-[10px] font-medium transition-colors',
-                    isActive ? 'text-primary' : 'text-muted-foreground'
-                  )}>
-                    {item.label}
-                  </span>
-                </Link>
-              );
-            }
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex flex-col items-center gap-0.5 px-2 py-2 transition-all duration-200',
-                  isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+                  'flex min-w-[74px] shrink-0 flex-col items-center gap-0.5 rounded-lg px-2 py-1.5 transition-all duration-200',
+                  isActive ? 'bg-secondary text-primary' : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 )}
               >
                 <div className={cn(
                   'relative transition-transform duration-200',
-                  isActive && 'scale-110'
+                  isActive && 'scale-105'
                 )}>
                   {isActive ? item.iconFilled : item.icon}
                   {isActive && (
@@ -148,7 +165,7 @@ export default function BottomNav() {
                   )}
                 </div>
                 <span className={cn(
-                  'text-[9px] font-medium leading-none',
+                  'text-[10px] font-medium leading-none',
                   isActive && 'font-semibold'
                 )}>
                   {item.label}
